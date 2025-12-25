@@ -75,4 +75,8 @@ public class VendaItens {
     public void setProduto(Produto produto) {
         this.produto = produto;
     }
+
+    public void calcularSubTotal() {
+        this.subtotal = precoUnitario.multiply(BigDecimal.valueOf(quantidade));
+    }
 }

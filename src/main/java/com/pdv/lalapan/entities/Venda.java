@@ -4,6 +4,7 @@ import com.pdv.lalapan.enums.MetodoPagamento;
 import com.pdv.lalapan.enums.StatusVenda;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public class Venda {
     private LocalDateTime dataHoraAbertura;
     private LocalDateTime dataHoraFechamento;
 
-    private double valorTotal;
+    private BigDecimal valorTotal = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
     private MetodoPagamento metodoPagamento;
@@ -61,11 +62,11 @@ public class Venda {
         this.dataHoraFechamento = dataHoraFechamento;
     }
 
-    public double getValorTotal() {
+    public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(double valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
 
@@ -91,5 +92,37 @@ public class Venda {
 
     public void setItens(List<VendaItens> itens) {
         this.itens = itens;
+    }
+
+    public void adicionarItem(VendaItens item) {
+        // Relacionamento bidirecional
+        item.setVenda(this);
+
+        // Adicionando a lista
+        itens.add(item);
+
+        // Recalcular o valorTotal
+        RecalcularValorTotal();
+    }
+
+    private void RecalcularValorTotal() {
+        /*
+        *   Observação: "this" referencia ao atributo desta entidade
+        *
+        *   transcrição: valorTotal vai receber nossa lista de VendaItens passando por um fluxo de dados em pipelines(Stream)
+        *                onde irá passar por uma operação intermédiaria(Map) que vai transformar cada elemento da stream em
+        *                outro objeto, aplicando a função geSubtotal()(basicamente ele vai dizer: "pega cada item de VendaItens
+        *                e pega só o subtotal de cada um.") e finalmente aplicando a operação terminal Reduce.
+        *                Ela tem como função combinar todos os elementos encontrados pelo filtro anterior e somar.
+        *
+        *   Etapas: 1°: List<VendaItens> itens entra como Stream(um fluxo de dados/filtros/operações;
+        *           2°: Para cada objeto VendaItens presente, extrair apenas o atributo subTotal;
+        *           3°: Reduce irá acumular os resultados e somar, guardando cada resultado anterior para obter o valortotal;
+        *           4°: tudo isso é armazenado em this.valorTotal que referencia ao atributo desta entidade.
+        *
+         */
+        this.valorTotal = itens.stream()
+                .map(VendaItens::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

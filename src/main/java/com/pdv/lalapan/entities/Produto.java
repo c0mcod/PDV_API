@@ -3,6 +3,7 @@ package com.pdv.lalapan.entities;
 import com.pdv.lalapan.enums.Categoria;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -13,7 +14,7 @@ public class Produto {
     private Long id;
 
     private String nome;
-    private double preco;
+    private BigDecimal preco = BigDecimal.ZERO;
     private double quantidadeEstoque;
     private double unidade;
     private Categoria categoria;
@@ -41,11 +42,11 @@ public class Produto {
         this.nome = nome;
     }
 
-    public double getPreco() {
+    public BigDecimal getPreco() {
         return preco;
     }
 
-    public void setPreco(double preco) {
+    public void setPreco(BigDecimal preco) {
         this.preco = preco;
     }
 
@@ -71,5 +72,13 @@ public class Produto {
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
+    }
+
+    public List<VendaItens> getVendaItens() {
+        return vendaItens;
+    }
+
+    public void setVendaItens(List<VendaItens> vendaItens) {
+        this.vendaItens = vendaItens;
     }
 }
