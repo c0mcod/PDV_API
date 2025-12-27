@@ -3,6 +3,7 @@ package com.pdv.lalapan.services;
 import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.entities.Venda;
 import com.pdv.lalapan.entities.VendaItens;
+import com.pdv.lalapan.enums.MetodoPagamento;
 import com.pdv.lalapan.enums.StatusVenda;
 import com.pdv.lalapan.repositories.ProdutoRepository;
 import com.pdv.lalapan.repositories.VendaRepository;
@@ -74,4 +75,38 @@ public class VendaService {
         return vendaRepo.save(venda);
     }
 
+    public Venda fecharVenda(Long vendaId, MetodoPagamento metodo) {
+        Venda venda = vendaRepo.findById(vendaId)
+                .orElseThrow(() -> new RuntimeException("Venda não encontrada."));
+        venda.fechar(metodo);
+
+        for (VendaItens item : venda.getItens()) {
+            Produto produto = item.getProduto();
+
+            if (produto.getQuantidadeEstoque() < item.getQuantidade()) {
+                throw new RuntimeException(
+                        "Estoque insuficiente para produto " + produto.getNome()
+                );
+            }
+
+            produto.setQuantidadeEstoque(
+                    produto.getQuantidadeEstoque() - item.getQuantidade()
+            );
+        }
+        return vendaRepo.save(venda);
+    }
+
+    public Venda cancelarVenda(Long vendaId) {
+        Venda venda = vendaRepo.findById(vendaId)
+                .orElseThrow(() -> new RuntimeException("Venda não encontrada."));
+        venda.cancelar();
+        return vendaRepo.save(venda);
+    }
+
+    public Venda cancelarItem(Long vendaId, Long itemId) {
+        Venda venda = vendaRepo.findById(vendaId)
+                .orElseThrow(() -> new RuntimeException("Venda não encontrada."));
+        venda.removerItem(itemId);
+        return vendaRepo.save(venda);
+    }
 }

@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Venda {
@@ -18,6 +19,7 @@ public class Venda {
 
     private LocalDateTime dataHoraAbertura;
     private LocalDateTime dataHoraFechamento;
+    private LocalDateTime dataHoraCancelamento;
 
     private BigDecimal valorTotal = BigDecimal.ZERO;
 
@@ -94,6 +96,14 @@ public class Venda {
         this.itens = itens;
     }
 
+    public LocalDateTime getDataHoraCancelamento() {
+        return dataHoraCancelamento;
+    }
+
+    public void setDataHoraCancelamento(LocalDateTime dataHoraCancelamento) {
+        this.dataHoraCancelamento = dataHoraCancelamento;
+    }
+
     public void adicionarItem(VendaItens item) {
         // Relacionamento bidirecional
         item.setVenda(this);
@@ -102,10 +112,10 @@ public class Venda {
         itens.add(item);
 
         // Recalcular o valorTotal
-        RecalcularValorTotal();
+        recalcularValorTotal();
     }
 
-    private void RecalcularValorTotal() {
+    private void recalcularValorTotal() {
         /*
         *   Observação: "this" referencia ao atributo desta entidade
         *
@@ -117,7 +127,7 @@ public class Venda {
         *
         *   Etapas: 1°: List<VendaItens> itens entra como Stream(um fluxo de dados/filtros/operações;
         *           2°: Para cada objeto VendaItens presente, extrair apenas o atributo subTotal;
-        *           3°: Reduce irá acumular os resultados e somar, guardando cada resultado anterior para obter o valortotal;
+        *           3°: Reduce tem como função combinar todos os valores mapeados anteriormente e somar;
         *           4°: tudo isso é armazenado em this.valorTotal que referencia ao atributo desta entidade.
         *
          */
@@ -125,4 +135,53 @@ public class Venda {
                 .map(VendaItens::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+    public void fechar(MetodoPagamento metodo) {
+        if(this.status != StatusVenda.ABERTA) {
+            throw new RuntimeException("não é possivel fechar venda que não esteja aberta.");
+        }
+
+        if(itens.isEmpty()) {
+            throw new RuntimeException("Não há itens na venda para finalizar");
+        }
+
+        if(this.getValorTotal().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("Valor total da venda menor ou igual a 0.");
+        }
+
+        if(metodo == null) {
+            throw new RuntimeException("Metodo de pagamento não definido");
+        }
+
+        this.setStatus(StatusVenda.FINALIZADA);
+        this.setDataHoraFechamento(LocalDateTime.now());
+    }
+
+    public void cancelar() {
+        if (this.status != StatusVenda.ABERTA) {
+            throw new RuntimeException("Só é possível cancelar uma venda com status ABERTA.");
+        }
+
+        this.setStatus(StatusVenda.CANCELADA);
+        this.setDataHoraCancelamento(LocalDateTime.now());
+    }
+
+    public void removerItem(Long vendaItemId) {
+        if(this.status != StatusVenda.ABERTA) {
+            throw new RuntimeException("Não é possível remover itens de uma venda que está aberta.");
+        }
+
+        boolean removido = this.itens.removeIf(item ->
+                item.getId().equals(vendaItemId));
+
+        if(!removido) {
+            throw new RuntimeException("Item não encontrado na venda");
+        }
+
+        recalcularValorTotal();
+    }
+
+
+
+
 }
