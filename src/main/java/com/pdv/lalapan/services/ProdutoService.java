@@ -1,11 +1,13 @@
 package com.pdv.lalapan.services;
 
+import com.pdv.lalapan.dto.ProdutoCreatedDTO;
+import com.pdv.lalapan.dto.ProdutoResponseDTO;
 import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.repositories.ProdutoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProdutoService {
@@ -16,41 +18,38 @@ public class ProdutoService {
         this.prodRepo = prodRepo;
     }
 
-    public Produto save(Produto p) {
-        return prodRepo.save(p);
+    public ProdutoResponseDTO create(ProdutoCreatedDTO dto) {
+        Produto produto = new Produto();
+        produto.setNome(dto.nome());
+        produto.setCategoria(dto.categoria());
+        produto.setUnidade(dto.unidade());
+        produto.setPreco(dto.preco());
+        produto.setQuantidadeEstoque(dto.quantidadeEstoque());
+
+        Produto salvo = prodRepo.save(produto);
+
+        return new ProdutoResponseDTO(salvo);
     }
 
-    public List<Produto> saveList(List<Produto> pList) {
-        return prodRepo.saveAll(pList);
+    public ProdutoResponseDTO buscarPorId(Long id) {
+        Produto produto = prodRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado."));
+
+        return new ProdutoResponseDTO(produto);
     }
 
-    public List<Produto> listAll(List<Produto> pListAll) {
-        return prodRepo.findAll();
-    }
-
-    public Produto update(Long id, Produto prodUpdate) {
-        Produto produtoExistente = prodRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + id));
-
-        produtoExistente.setNome(prodUpdate.getNome());
-        produtoExistente.setPreco(prodUpdate.getPreco());
-        produtoExistente.setUnidade(prodUpdate.getUnidade());
-        produtoExistente.setCategoria(prodUpdate.getCategoria());
-        produtoExistente.setQuantidadeEstoque(prodUpdate.getQuantidadeEstoque());
-
-        return prodRepo.save(prodUpdate);
-    }
-
-    public boolean deleteById(Long id) {
-        Optional<Produto> produtoExistente = prodRepo.findById(id);
-        if (produtoExistente.isPresent()) {
-            prodRepo.deleteById(id);
-            return true;
+    public void delete(Long id) {
+        if (!prodRepo.existsById(id)) {
+            throw new EntityNotFoundException("Produto não encontrado.");
         }
-        return false;
+        prodRepo.deleteById(id);
     }
 
-    public Optional<Produto> findById(Long id) {
-        return prodRepo.findById(id);
+    public List<ProdutoResponseDTO> buscarTodosProdutos() {
+        return prodRepo.findAll()
+                .stream()
+                .map(ProdutoResponseDTO :: new)
+                .toList();
     }
+
 }

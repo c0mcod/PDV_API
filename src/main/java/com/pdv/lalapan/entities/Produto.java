@@ -1,6 +1,7 @@
 package com.pdv.lalapan.entities;
 
 import com.pdv.lalapan.enums.Categoria;
+import com.pdv.lalapan.enums.Unidade;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -16,7 +17,11 @@ public class Produto {
     private String nome;
     private BigDecimal preco = BigDecimal.ZERO;
     private double quantidadeEstoque;
-    private double unidade;
+
+    @Enumerated(EnumType.STRING)
+    private Unidade unidade;
+
+    @Enumerated(EnumType.STRING)
     private Categoria categoria;
 
     @OneToMany(mappedBy = "produto")
@@ -58,11 +63,11 @@ public class Produto {
         this.quantidadeEstoque = quantidadeEstoque;
     }
 
-    public double getUnidade() {
+    public Unidade getUnidade() {
         return unidade;
     }
 
-    public void setUnidade(double unidade) {
+    public void setUnidade(Unidade unidade) {
         this.unidade = unidade;
     }
 
