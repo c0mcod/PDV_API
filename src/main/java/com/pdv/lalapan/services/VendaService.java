@@ -1,5 +1,9 @@
 package com.pdv.lalapan.services;
 
+import com.pdv.lalapan.dto.VendaAberturaDTO;
+import com.pdv.lalapan.dto.VendaAddItemRequestDTO;
+import com.pdv.lalapan.dto.VendaAddItemResponseDTO;
+import com.pdv.lalapan.dto.VendaResponseDTO;
 import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.entities.Venda;
 import com.pdv.lalapan.entities.VendaItens;
@@ -26,16 +30,17 @@ public class VendaService {
     }
 
 
-    public Venda iniciarVenda() {
+    public VendaAberturaDTO iniciarVenda() {
         Venda venda = new Venda();
         venda.setDataHoraAbertura(LocalDateTime.now());
         venda.setStatus(StatusVenda.ABERTA);
         venda.setValorTotal(BigDecimal.ZERO);
 
-        return venda;
+        Venda salva = vendaRepo.save(venda);
+        return new VendaAberturaDTO(salva.getId());
     }
 
-    public Venda adicionarItem(Long vendaId, Long produtoId, int quantidade) {
+    public VendaAddItemResponseDTO adicionarItem(Long vendaId, VendaAddItemRequestDTO dto) {
         /*
         * O metodo "adicionarItem" valida a venda, o produto e o status da venda, assegurando sempre se a venda é possível
         * e se os paramêtros estão válidos.
@@ -57,7 +62,7 @@ public class VendaService {
                 .orElseThrow(() -> new RuntimeException("Venda não encontrada"));
 
         // Verifica se produto existe
-        Produto produto = prodRepo.findById(produtoId)
+        Produto produto = prodRepo.findById(dto.idProduto())
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
         // Checagem de status de venda
         if (venda.getStatus() != StatusVenda.ABERTA) {
@@ -66,13 +71,18 @@ public class VendaService {
 
         VendaItens item = new VendaItens();
         item.setProduto(produto);
-        item.setQuantidade(quantidade);
+        item.setQuantidade(dto.quantidade());
         item.setPrecoUnitario(produto.getPreco());
         item.calcularSubTotal();
 
         venda.adicionarItem(item);
 
-        return vendaRepo.save(venda);
+        Venda vendaSalva = vendaRepo.save(venda);
+
+        return new VendaAddItemResponseDTO(
+                vendaSalva.getId(),
+                vendaSalva.getValorTotal()
+        );
     }
 
     public Venda fecharVenda(Long vendaId, MetodoPagamento metodo) {
