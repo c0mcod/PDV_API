@@ -1,9 +1,6 @@
 package com.pdv.lalapan.services;
 
-import com.pdv.lalapan.dto.VendaAberturaDTO;
-import com.pdv.lalapan.dto.VendaAddItemRequestDTO;
-import com.pdv.lalapan.dto.VendaAddItemResponseDTO;
-import com.pdv.lalapan.dto.VendaResponseDTO;
+import com.pdv.lalapan.dto.*;
 import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.entities.Venda;
 import com.pdv.lalapan.entities.VendaItens;
@@ -11,6 +8,7 @@ import com.pdv.lalapan.enums.MetodoPagamento;
 import com.pdv.lalapan.enums.StatusVenda;
 import com.pdv.lalapan.repositories.ProdutoRepository;
 import com.pdv.lalapan.repositories.VendaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -85,10 +83,12 @@ public class VendaService {
         );
     }
 
-    public Venda fecharVenda(Long vendaId, MetodoPagamento metodo) {
+    @Transactional
+    public VendaFinalizadaResponseDTO fecharVenda(Long vendaId, VendaFinalizadaRequestDTO dto) {
         Venda venda = vendaRepo.findById(vendaId)
                 .orElseThrow(() -> new RuntimeException("Venda não encontrada."));
-        venda.fechar(metodo);
+
+        venda.fechar(dto.metodo());
 
         for (VendaItens item : venda.getItens()) {
             Produto produto = item.getProduto();
@@ -103,7 +103,11 @@ public class VendaService {
                     produto.getQuantidadeEstoque() - item.getQuantidade()
             );
         }
-        return vendaRepo.save(venda);
+
+        Venda vendaFinalizada = vendaRepo.save(venda);
+        return new VendaFinalizadaResponseDTO(
+                vendaFinalizada.getId()
+        );
     }
 
     public Venda cancelarVenda(Long vendaId) {

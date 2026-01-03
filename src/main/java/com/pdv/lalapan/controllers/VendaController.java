@@ -1,9 +1,6 @@
 package com.pdv.lalapan.controllers;
 
-import com.pdv.lalapan.dto.VendaAberturaDTO;
-import com.pdv.lalapan.dto.VendaAddItemRequestDTO;
-import com.pdv.lalapan.dto.VendaAddItemResponseDTO;
-import com.pdv.lalapan.dto.VendaResponseDTO;
+import com.pdv.lalapan.dto.*;
 import com.pdv.lalapan.services.VendaService;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +26,12 @@ public class VendaController {
     @PostMapping("/{vendaId}/itens")
     public ResponseEntity<VendaAddItemResponseDTO> adicionarItens(@PathVariable Long vendaId, @RequestBody VendaAddItemRequestDTO requestDto) {
         VendaAddItemResponseDTO response = vendaService.adicionarItem(vendaId, requestDto);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{vendaId}/finalizar")
+    public ResponseEntity<VendaFinalizadaResponseDTO> finalizarVenda(@PathVariable Long vendaId, @RequestBody VendaFinalizadaRequestDTO requestDTO) {
+        VendaFinalizadaResponseDTO response = vendaService.fecharVenda(vendaId, requestDTO);
         return ResponseEntity.ok(response);
     }
 }
