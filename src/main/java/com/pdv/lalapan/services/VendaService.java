@@ -105,7 +105,7 @@ public class VendaService {
         Venda vendaSalva = vendaRepo.save(venda);
         return new CancelarVendaDTO(
                 vendaSalva.getId()
-        )
+        );
     }
 
     @Transactional
