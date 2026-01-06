@@ -14,4 +14,8 @@ public class VendaNaoAbertaException extends RuntimeException{
     public StatusVenda getStatusAtual() {
         return statusAtual;
     }
+
+    public Long getIdVenda() {
+        return idVenda;
+    }
 }

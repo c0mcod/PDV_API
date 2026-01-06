@@ -4,9 +4,7 @@ import com.pdv.lalapan.dto.ProdutoCreatedDTO;
 import com.pdv.lalapan.dto.ProdutoResponseDTO;
 import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.exceptions.ProdutoInexistenteException;
-import com.pdv.lalapan.exceptions.ProdutoNaoEncontradoException;
 import com.pdv.lalapan.repositories.ProdutoRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +34,7 @@ public class ProdutoService {
 
     public ProdutoResponseDTO buscarPorId(Long id) {
         Produto produto = prodRepo.findById(id)
-                .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
+                .orElseThrow(() -> new ProdutoInexistenteException(id));
 
         return new ProdutoResponseDTO(produto);
     }

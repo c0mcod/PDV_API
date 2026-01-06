@@ -6,7 +6,7 @@ import com.pdv.lalapan.entities.Venda;
 import com.pdv.lalapan.entities.VendaItens;
 import com.pdv.lalapan.enums.StatusVenda;
 import com.pdv.lalapan.exceptions.EstoqueInsuficienteException;
-import com.pdv.lalapan.exceptions.ProdutoNaoEncontradoException;
+import com.pdv.lalapan.exceptions.ProdutoInexistenteException;
 import com.pdv.lalapan.exceptions.VendaNaoAbertaException;
 import com.pdv.lalapan.exceptions.VendaNaoEncontradaException;
 import com.pdv.lalapan.repositories.ProdutoRepository;
@@ -48,7 +48,7 @@ public class VendaService {
 
         // Verifica se produto existe
         Produto produto = prodRepo.findById(dto.idProduto())
-                .orElseThrow(() -> new ProdutoNaoEncontradoException(dto.idProduto()));
+                .orElseThrow(() -> new ProdutoInexistenteException(dto.idProduto()));
 
         // Checagem de status de venda
         if (venda.getStatus() != StatusVenda.ABERTA) {

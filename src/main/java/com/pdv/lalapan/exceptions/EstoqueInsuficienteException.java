@@ -18,4 +18,12 @@ public class EstoqueInsuficienteException extends RuntimeException{
     public String getNomeProduto() {
         return nomeProduto;
     }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public Double getQuantidadeEstoque() {
+        return quantidadeEstoque;
+    }
 }
