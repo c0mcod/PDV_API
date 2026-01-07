@@ -58,6 +58,11 @@ public class VendaService {
         VendaItens item = new VendaItens();
         item.setProduto(produto);
         item.setQuantidade(dto.quantidade());
+
+        if (produto.getQuantidadeEstoque() < item.getQuantidade()) {
+            throw new EstoqueInsuficienteException(produto.getNome(), item.getQuantidade(), produto.getQuantidadeEstoque());
+        }
+
         item.setPrecoUnitario(produto.getPreco());
         item.calcularSubTotal();
 
