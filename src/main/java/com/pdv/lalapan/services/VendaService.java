@@ -78,6 +78,16 @@ public class VendaService {
 
     @Transactional
     public VendaFinalizadaResponseDTO fecharVenda(Long vendaId, VendaFinalizadaRequestDTO dto) {
+        return finalizarVenda(vendaId, dto, true);
+    }
+
+    @Transactional
+    public VendaFinalizadaResponseDTO forcarVendaFechada(Long idVenda, VendaFinalizadaRequestDTO dto) {
+        return finalizarVenda(idVenda, dto, false);
+    }
+
+    @Transactional
+    public VendaFinalizadaResponseDTO finalizarVenda(Long vendaId, VendaFinalizadaRequestDTO dto, boolean validarEstoque) {
         Venda venda = vendaRepo.findById(vendaId)
                 .orElseThrow(() -> new VendaNaoEncontradaException(vendaId));
 
@@ -86,7 +96,7 @@ public class VendaService {
         for (VendaItens item : venda.getItens()) {
             Produto produto = item.getProduto();
 
-            if (produto.getQuantidadeEstoque() < item.getQuantidade()) {
+            if (validarEstoque && produto.getQuantidadeEstoque() < item.getQuantidade()) {
                 throw new EstoqueInsuficienteException(produto.getNome(), item.getQuantidade(), produto.getQuantidadeEstoque());
             }
 
@@ -100,6 +110,7 @@ public class VendaService {
                 vendaFinalizada.getId()
         );
     }
+
 
     @Transactional
     public CancelarVendaDTO cancelarVenda(Long vendaId) {
