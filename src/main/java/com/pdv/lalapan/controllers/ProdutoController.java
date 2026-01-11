@@ -1,6 +1,7 @@
 package com.pdv.lalapan.controllers;
 
 import com.pdv.lalapan.dto.ProdutoCreatedDTO;
+import com.pdv.lalapan.dto.ProdutoEstoqueBaixoDTO;
 import com.pdv.lalapan.dto.ProdutoResponseDTO;
 import com.pdv.lalapan.services.ProdutoService;
 import org.springframework.http.HttpStatus;
@@ -40,5 +41,11 @@ public class ProdutoController {
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         produtoService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/estoque-baixo")
+    public ResponseEntity<List<ProdutoEstoqueBaixoDTO>> listarEstoqueBaixo() {
+        List<ProdutoEstoqueBaixoDTO> produtos = produtoService.listarEstoqueBaixo();
+        return ResponseEntity.ok(produtos);
     }
 }

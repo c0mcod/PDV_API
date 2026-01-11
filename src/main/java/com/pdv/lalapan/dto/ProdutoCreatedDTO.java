@@ -5,6 +5,6 @@ import com.pdv.lalapan.enums.Unidade;
 
 import java.math.BigDecimal;
 
-public record ProdutoCreatedDTO(String nome, String codigo, BigDecimal preco, Unidade unidade, Categoria categoria, double quantidadeEstoque) {
+public record ProdutoCreatedDTO(String nome, String codigo, double estoqueMinimo, BigDecimal preco, Unidade unidade, Categoria categoria, double quantidadeEstoque) {
 
 }

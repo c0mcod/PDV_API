@@ -17,6 +17,7 @@ public class Produto {
     private String nome;
     private BigDecimal preco = BigDecimal.ZERO;
     private String codigo;
+    private double estoqueMinimo;
     private double quantidadeEstoque;
 
     @Enumerated(EnumType.STRING)
@@ -94,5 +95,17 @@ public class Produto {
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
+    }
+
+    public double getEstoqueMinimo() {
+        return estoqueMinimo;
+    }
+
+    public void setEstoqueMinimo(double estoqueMinimo) {
+        this.estoqueMinimo = estoqueMinimo;
+    }
+
+    public boolean isEstoqueBaixo() {
+        return this.quantidadeEstoque <= this.estoqueMinimo;
     }
 }

@@ -1,6 +1,8 @@
 package com.pdv.lalapan.services;
 
+import com.pdv.lalapan.dto.ProdutoAtualizadoDTO;
 import com.pdv.lalapan.dto.ProdutoCreatedDTO;
+import com.pdv.lalapan.dto.ProdutoEstoqueBaixoDTO;
 import com.pdv.lalapan.dto.ProdutoResponseDTO;
 import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.exceptions.ProdutoInexistenteException;
@@ -32,6 +34,22 @@ public class ProdutoService {
         return new ProdutoResponseDTO(salvo);
     }
 
+    public ProdutoAtualizadoDTO atualizarProduto(Long produtoId, ProdutoAtualizadoDTO dto) {
+        Produto produto = prodRepo.findById(produtoId)
+                .orElseThrow(() -> new ProdutoInexistenteException(produtoId));
+
+        produto.setNome(dto.nome());
+        produto.setCodigo(dto.codigo());
+        produto.setCategoria(dto.categoria());
+        produto.setUnidade(dto.unidade());
+        produto.setPreco(dto.preco());
+        produto.setQuantidadeEstoque(dto.quantidadeEstoque());
+
+        Produto produtoAtualizado = prodRepo.save(produto);
+
+        return ProdutoAtualizadoDTO.fromEntity(produtoAtualizado);
+    }
+
     public ProdutoResponseDTO buscarPorId(Long id) {
         Produto produto = prodRepo.findById(id)
                 .orElseThrow(() -> new ProdutoInexistenteException(id));
@@ -53,4 +71,10 @@ public class ProdutoService {
                 .toList();
     }
 
+    public List<ProdutoEstoqueBaixoDTO> listarEstoqueBaixo() {
+        return prodRepo.findProdutosComEstoqueBaixo()
+                .stream()
+                .map(ProdutoEstoqueBaixoDTO::fromEntity)
+                .toList();
+    }
 }
