@@ -60,7 +60,7 @@ public class VendaService {
         item.setQuantidade(dto.quantidade());
 
         if (produto.getQuantidadeEstoque() < item.getQuantidade()) {
-            throw new EstoqueInsuficienteException(produto.getNome(), item.getQuantidade(), produto.getQuantidadeEstoque());
+            System.out.println("AVISO: Adicionando mais itens que o estoque disponível!");
         }
 
         item.setPrecoUnitario(produto.getPreco());
