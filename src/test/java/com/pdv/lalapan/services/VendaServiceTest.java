@@ -39,6 +39,8 @@ class VendaServiceTest {
         return prodRepo.save(p);
     }
 
+    private
+
     @Test
     void deveCriarVendaComSucesso() {
         VendaAberturaDTO venda = vendaService.iniciarVenda();
@@ -109,4 +111,21 @@ class VendaServiceTest {
         assertTrue(atualizado.getQuantidadeEstoque() < 0);
     }
 
+    @Test
+    void deveCancelarVenda() {
+        // ====== ARRANGE ======
+        Produto produto = criarProduto("FEIJÃO", 100.00);
+        VendaAberturaDTO novaVenda = vendaService.iniciarVenda();
+        vendaService.adicionarItem(
+                novaVenda.vendaId(),
+                new VendaAddItemRequestDTO(produto.getId(), 10)
+        );
+
+        // ====== ACT ======
+        CancelarVendaDTO response = vendaService.cancelarVenda(novaVenda.vendaId());
+
+        // ====== ASSERT ======
+        assertNotNull(response);
+        assertEquals(StatusVenda.CANCELADA, response.status());
+    }
 }

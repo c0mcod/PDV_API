@@ -120,7 +120,8 @@ public class VendaService {
         venda.cancelar();
         Venda vendaSalva = vendaRepo.save(venda);
         return new CancelarVendaDTO(
-                vendaSalva.getId()
+                vendaSalva.getId(),
+                vendaSalva.getStatus()
         );
     }
 

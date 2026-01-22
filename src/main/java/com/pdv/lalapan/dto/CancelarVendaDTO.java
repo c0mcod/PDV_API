@@ -1,4 +1,6 @@
 package com.pdv.lalapan.dto;
 
-public record CancelarVendaDTO(Long vendaId) {
+import com.pdv.lalapan.enums.StatusVenda;
+
+public record CancelarVendaDTO(Long vendaId, StatusVenda status) {
 }
