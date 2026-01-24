@@ -7,6 +7,9 @@ import com.pdv.lalapan.enums.Categoria;
 import com.pdv.lalapan.enums.MetodoPagamento;
 import com.pdv.lalapan.enums.StatusVenda;
 import com.pdv.lalapan.enums.Unidade;
+import com.pdv.lalapan.exceptions.EstoqueInsuficienteException;
+import com.pdv.lalapan.exceptions.VendaNaoAbertaException;
+import com.pdv.lalapan.exceptions.VendaNaoEncontradaException;
 import com.pdv.lalapan.repositories.ProdutoRepository;
 import com.pdv.lalapan.repositories.VendaRepository;
 import jakarta.transaction.Transactional;
@@ -44,6 +47,7 @@ class VendaServiceTest {
         return prodRepo.save(p);
     }
 
+    // ========== TESTES DE MÉTODOS =========
     @Test
     void deveCriarVendaComSucesso() {
         VendaAberturaDTO venda = vendaService.iniciarVenda();
@@ -168,4 +172,51 @@ class VendaServiceTest {
         assertEquals(produto.getId(), vendaAtualizada.getItens().get(0).getProduto().getId());
         assertEquals(0, vendaAtualizada.getValorTotal().compareTo(new BigDecimal("20.00")));
     }
+
+    // ========== TESTES DE EXCEPTIONS ==========
+    @Test
+    void naoDeveFinalizarVendaEstoqueInsuficiente() {
+        VendaAberturaDTO venda = vendaService.iniciarVenda();
+        Produto produto = criarProduto("feijão", 0.0);
+
+        vendaService.adicionarItem(
+                venda.vendaId(),
+                new VendaAddItemRequestDTO(produto.getId(), 1)
+        );
+
+        assertThrows(
+                EstoqueInsuficienteException.class,
+                () -> vendaService.fecharVenda(venda.vendaId(), new VendaFinalizadaRequestDTO(MetodoPagamento.PIX))
+        );
+    }
+
+    @Test
+    void naoDeveAdicionarItemComVendaNaoAberta() {
+        VendaAberturaDTO venda = vendaService.iniciarVenda();
+        Produto produto = criarProduto("arroz", 5);
+
+        Venda vendaAtualizada = vendaRepo.findById(venda.vendaId()).get();
+
+        vendaService.adicionarItem(
+                venda.vendaId(),
+                new VendaAddItemRequestDTO(produto.getId(), 1)
+        );
+
+        vendaService.fecharVenda(venda.vendaId(), new VendaFinalizadaRequestDTO(MetodoPagamento.PIX));
+
+        assertThrows(
+                VendaNaoAbertaException.class,
+                () -> vendaService.adicionarItem(venda.vendaId(), new VendaAddItemRequestDTO(produto.getId(), 1))
+                );
+    }
+
+    @Test
+    void naoDeveAdicionarProdutoEmVendaNaoEncontrada() {
+        Produto produto = criarProduto("arroz", 5);
+
+        assertThrows(VendaNaoEncontradaException.class,
+                () -> vendaService.adicionarItem(999L, new VendaAddItemRequestDTO(produto.getId(), 1))
+                );
+    }
+
 }
