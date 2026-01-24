@@ -6,6 +6,7 @@ import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.enums.Categoria;
 import com.pdv.lalapan.enums.Unidade;
 import com.pdv.lalapan.exceptions.ProdutoInexistenteException;
+import com.pdv.lalapan.exceptions.QuantidadeInvalidaException;
 import com.pdv.lalapan.repositories.ProdutoRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -82,4 +83,16 @@ public class ProdutoServiceTest {
                 () -> produtoService.registrarEntrada(999L, new EntradaProdutoRequestDTO("teste", 10.00))
         );
     }
+
+    @Test
+    void naoDeveRegistrarProdutoQuantidadeInvalida() {
+        // ====== ARRANGE ======
+        Produto produto = criarProduto("feijao", 2);
+
+        // ====== ACT & ASSERT ======
+        assertThrows(QuantidadeInvalidaException.class,
+                () -> produtoService.registrarEntrada(produto.getId(), new EntradaProdutoRequestDTO("Teste", -10))
+                );
+    }
+
 }
