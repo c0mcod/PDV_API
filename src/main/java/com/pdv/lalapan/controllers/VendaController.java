@@ -35,10 +35,16 @@ public class VendaController {
         return ResponseEntity.ok(response);
     }
 
-    // ========== ==========
+    // ========== FUNÇÕES AUXILIARES ==========
     @PostMapping("/{vendaId}/remover-item")
     public ResponseEntity<CancelarItemDTO> cancelarItem(@PathVariable Long vendaId, @RequestBody RemoverItemRequest request) {
         CancelarItemDTO response = vendaService.cancelarItem(vendaId, request.itemId());
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{vendaId}/cancelar-venda")
+    public ResponseEntity<CancelarVendaDTO> cancelarVenda(@PathVariable Long vendaId) {
+        CancelarVendaDTO response = vendaService.cancelarVenda(vendaId);
         return ResponseEntity.ok(response);
     }
 }
