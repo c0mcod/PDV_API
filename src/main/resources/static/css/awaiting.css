@@ -1,0 +1,259 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Cabeçalho Azul */
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 500;
+            padding-left: 15px;
+            border-left: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .caixa-info {
+            background-color: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background-color: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .close-btn:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+
+        /* Container Principal */
+        .main-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            height: calc(100vh - 54px);
+        }
+
+        /* Banner Lateral */
+        .left-banner {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .banner-content {
+            text-align: center;
+            color: white;
+        }
+
+        .banner-logo {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .banner-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .banner-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .banner-contact {
+            font-size: 14px;
+            line-height: 1.8;
+            opacity: 0.8;
+        }
+
+        /* Painel Principal */
+        .right-panel {
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        /* Card Central */
+        .venda-card {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .card-icon {
+            font-size: 120px;
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .card-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2a5298;
+            margin-bottom: 15px;
+        }
+
+        .card-subtitle {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 50px;
+            line-height: 1.6;
+        }
+
+        /* Info Box */
+        .info-box {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 40px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: #212529;
+            font-weight: 700;
+        }
+
+        /* Botão Principal */
+        .btn-iniciar {
+            width: 100%;
+            padding: 24px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 24px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s;
+        }
+
+        .btn-iniciar:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-iniciar:active {
+            transform: translateY(-2px);
+        }
+
+        /* Status do Caixa */
+        .caixa-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: #d4edda;
+            color: #155724;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #28a745;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Footer */
+        .footer-text {
+            margin-top: 30px;
+            font-size: 13px;
+            color: #6c757d;
+        }
