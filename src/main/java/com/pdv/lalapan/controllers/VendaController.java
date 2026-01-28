@@ -47,4 +47,10 @@ public class VendaController {
         CancelarVendaDTO response = vendaService.cancelarVenda(vendaId);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{vendaId}")
+    public ResponseEntity<VendaDetalhadaDTO> buscarVenda(@PathVariable Long vendaId) {
+        return ResponseEntity.ok(vendaService.buscarVendaDetalhada(vendaId));
+    }
+
 }

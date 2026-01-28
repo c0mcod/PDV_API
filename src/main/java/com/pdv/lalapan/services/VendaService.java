@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -148,6 +149,26 @@ public class VendaService {
         return new CancelarItemDTO(
                 vendaSalva.getId(),
                 vendaItemId
+        );
+    }
+
+    public VendaDetalhadaDTO buscarVendaDetalhada(Long vendaId) {
+        Venda venda = vendaRepo.findById(vendaId)
+                .orElseThrow(() -> new VendaNaoEncontradaException(vendaId));
+        List<VendaItemDTO> itens = venda.getItens().stream()
+                .map(item -> new VendaItemDTO(
+                        item.getId(),
+                        item.getProduto().getId(),
+                        item.getProduto().getNome(),
+                        item.getPrecoUnitario(),
+                        item.getQuantidade()
+
+                )).toList();
+
+        return new VendaDetalhadaDTO(
+                venda.getId(),
+                venda.getValorTotal(),
+                itens
         );
     }
 }
