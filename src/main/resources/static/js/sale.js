@@ -41,11 +41,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     produtos = await apiGetProducts();
     carregarSelectProdutos(produtos);
+
+    const venda = await apiGetVenda(vendaIdAtual);
+
+    itensVenda = venda.itens.map(item => ({
+      itemId: item.itemId,
+      productId: item.produtoId,
+      quantity: item.quantidade
+    }));
+
+    renderizarItens();
+    atualizarSubtotal();
+
   } catch (e) {
     alert("Erro ao inicializar o PDV");
     console.error(e);
   }
 });
+
 
 /* =========================
    PRODUTOS - SELECT

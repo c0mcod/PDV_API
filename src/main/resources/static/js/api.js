@@ -43,6 +43,13 @@ async function apiAbrirVenda() {
   return response.json();
 }
 
+async function apiGetVenda(vendaId) {
+  const response = await fetch(`${API_BASE_URL}/venda/${vendaId}`);
+  if (!response.ok) throw new Error("Erro ao carregar venda");
+  return response.json();
+}
+
+
 async function apiAdicionarItemVenda(vendaId, payload) {
   const response = await fetch(`${API_BASE_URL}/venda/${vendaId}/itens`, {
     method: "POST",
