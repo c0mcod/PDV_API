@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class VendaService {
@@ -30,6 +31,13 @@ public class VendaService {
 
 
     public VendaAberturaDTO iniciarVenda() {
+
+        Optional<Venda> vendaAberta = vendaRepo.findByStatus(StatusVenda.ABERTA);
+
+        if (vendaAberta.isPresent()) {
+            return new VendaAberturaDTO(vendaAberta.get().getId());
+        }
+
         Venda venda = new Venda();
         venda.setDataHoraAbertura(LocalDateTime.now());
         venda.setStatus(StatusVenda.ABERTA);
@@ -38,6 +46,7 @@ public class VendaService {
         Venda salva = vendaRepo.save(venda);
         return new VendaAberturaDTO(salva.getId());
     }
+
 
     @Transactional
     public VendaAddItemResponseDTO adicionarItem(Long vendaId, VendaAddItemRequestDTO dto) {
