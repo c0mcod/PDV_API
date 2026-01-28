@@ -1,3 +1,7 @@
+/* =========================
+   VERIFICAÇÃO INICIAL
+========================= */
+
 const params = new URLSearchParams(window.location.search);
 const vendaIdAtual = params.get("vendaId");
 
@@ -44,14 +48,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 /* =========================
-   PRODUTOS
+   PRODUTOS - SELECT
 ========================= */
 
 function carregarSelectProdutos(produtos) {
   produtos.forEach(produto => {
     const option = document.createElement("option");
     option.value = produto.id;
-    option.textContent = `${produto.nome} - R$ ${produto.preco.toFixed(2)}`;
+    option.textContent = `${produto.nome}`;
     produtoSelect.appendChild(option);
   });
 }
@@ -59,11 +63,17 @@ function carregarSelectProdutos(produtos) {
 produtoSelect.addEventListener("change", () => {
   const produto = obterProdutoSelecionado();
   if (!produto) {
-    limparProdutoSelecionado();
+    limparProdutoDestaque();
     return;
   }
-
   atualizarProdutoDestaque(produto);
+});
+
+quantidadeInput.addEventListener("input", () => {
+  const produto = obterProdutoSelecionado();
+  if (produto) {
+    atualizarProdutoDestaque(produto);
+  }
 });
 
 /* =========================
@@ -77,27 +87,19 @@ function obterProdutoSelecionado() {
 
 function atualizarProdutoDestaque(produto) {
   const quantidade = Number(quantidadeInput.value);
-
   produtoTitulo.textContent = `${quantidade} x ${produto.nome}`;
   precoUnitarioInput.value = `R$ ${produto.preco.toFixed(2)}`;
   precoTotalInput.value = `R$ ${(produto.preco * quantidade).toFixed(2)}`;
 }
 
-function limparProdutoSelecionado() {
+function limparProdutoDestaque() {
   produtoTitulo.textContent = "Selecione um produto";
   precoUnitarioInput.value = "";
   precoTotalInput.value = "";
 }
 
-quantidadeInput.addEventListener("input", () => {
-  const produto = obterProdutoSelecionado();
-  if (produto) {
-    atualizarProdutoDestaque(produto);
-  }
-});
-
 /* =========================
-   ITENS DA VENDA
+   ADICIONAR ITEM
 ========================= */
 
 btnAdicionarItem.addEventListener("click", async () => {
@@ -135,27 +137,26 @@ btnAdicionarItem.addEventListener("click", async () => {
   }
 });
 
-
-
-function adicionarItem(productId, quantity) {
-  itensVenda.push({ productId, quantity });
-}
+/* =========================
+   REMOVER ITEM
+========================= */
 
 async function removerItem(index) {
   const item = itensVenda[index];
 
   try {
     await apiRemoverItemVenda(vendaIdAtual, item.itemId);
-
     itensVenda.splice(index, 1);
     renderizarItens();
     atualizarSubtotal();
-
   } catch (e) {
     alert(e.message);
   }
 }
 
+/* =========================
+   RENDERIZAR ITENS
+========================= */
 
 function renderizarItens() {
   listaItensVenda.innerHTML = "";
@@ -170,7 +171,7 @@ function renderizarItens() {
       <div class="item-numero">#${index + 1}</div>
       <div>
         <div class="item-nome">${produto.nome}</div>
-        <div class="item-codigo">${produto.id}</div>
+        <div class="item-codigo">${produto.codigo}</div>
       </div>
       <div class="item-qtd">${item.quantity} un</div>
       <div class="item-preco">R$ ${produto.preco.toFixed(2)}</div>
@@ -203,8 +204,9 @@ function atualizarSubtotal() {
 }
 
 /* =========================
-   FINALIZAR / CANCELAR
+   FINALIZAR VENDA
 ========================= */
+
 btnFinalizarVenda.addEventListener("click", async () => {
   if (itensVenda.length === 0) {
     alert("Nenhum item na venda");
@@ -212,15 +214,16 @@ btnFinalizarVenda.addEventListener("click", async () => {
   }
 
   try {
-    await fetch(`${API_BASE_URL}/venda/${vendaIdAtual}/finalizar`, {
-      method: "POST"
-    });
-
+    await apiFinalizarVenda(vendaIdAtual);
     window.location.href = "/pages/awaiting.html";
-  } catch {
-    alert("Erro ao finalizar venda");
+  } catch (e) {
+    alert(e.message);
   }
 });
+
+/* =========================
+   CANCELAR VENDA
+========================= */
 
 btnCancelarVenda.addEventListener("click", async () => {
   if (!confirm("Cancelar a venda atual?")) return;
@@ -232,6 +235,3 @@ btnCancelarVenda.addEventListener("click", async () => {
     alert(e.message);
   }
 });
-
-
-

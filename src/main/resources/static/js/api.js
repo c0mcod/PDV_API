@@ -31,10 +31,8 @@ async function apiCreateProduct(product) {
    VENDAS
 ======================= */
 
-const VENDA_BASE_URL = `${API_BASE_URL}/venda`;
-
 async function apiAbrirVenda() {
-  const response = await fetch(`${VENDA_BASE_URL}/abrir`, {
+  const response = await fetch(`${API_BASE_URL}/venda/abrir`, {
     method: "POST"
   });
 
@@ -60,11 +58,24 @@ async function apiAdicionarItemVenda(vendaId, payload) {
   return response.json();
 }
 
-async function apiFinalizarVenda(vendaId, dadosFinalizacao) {
-  const response = await fetch(`${VENDA_BASE_URL}/${vendaId}/finalizar`, {
+async function apiRemoverItemVenda(vendaId, itemId) {
+  const response = await fetch(`${API_BASE_URL}/venda/${vendaId}/remover-item`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(dadosFinalizacao)
+    body: JSON.stringify({ itemId })
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Erro ao remover item");
+  }
+
+  return response.json();
+}
+
+async function apiFinalizarVenda(vendaId) {
+  const response = await fetch(`${API_BASE_URL}/venda/${vendaId}/finalizar`, {
+    method: "POST"
   });
 
   if (!response.ok) {
@@ -75,42 +86,15 @@ async function apiFinalizarVenda(vendaId, dadosFinalizacao) {
   return response.json();
 }
 
-/* =======================
-   VENDAS - ITENS
-======================= */
-
-async function apiRemoverItemVenda(vendaId, itemId) {
-  const response = await fetch(
-    `${API_BASE_URL}/venda/${vendaId}/remover-item`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ itemId })
-    }
-  );
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Erro ao remover item");
-  }
-
-  return response.json(); // CancelarItemDTO
-}
-
 async function apiCancelarVenda(vendaId) {
-  const response = await fetch(
-    `${API_BASE_URL}/venda/${vendaId}/cancelar-venda`,
-    {
-      method: "POST"
-    }
-  );
+  const response = await fetch(`${API_BASE_URL}/venda/${vendaId}/cancelar-venda`, {
+    method: "POST"
+  });
 
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || "Erro ao cancelar venda");
   }
 
-  return response.json(); // CancelarVendaDTO
+  return response.json();
 }
-
-
