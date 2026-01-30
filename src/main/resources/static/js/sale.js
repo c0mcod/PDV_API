@@ -216,13 +216,6 @@ function atualizarSubtotal() {
   subtotalVenda.textContent = `R$ ${total.toFixed(2)}`;
 }
 
-/* =========================
-   FINALIZAR VENDA
-========================= */
-
-/* =========================
-   ABRIR TELA DE PAGAMENTO
-========================= */
 btnFinalizarVenda.addEventListener("click", () => {
   if (itensVenda.length === 0) {
     alert("Nenhum item na venda");
@@ -253,6 +246,7 @@ btnCancelarVenda.addEventListener("click", async () => {
     alert(e.message);
   }
 });
+
 /* =========================
    LÓGICA DO MODAL DE PAGAMENTO
 ========================= */
@@ -262,49 +256,64 @@ const valorTrocoTexto = document.getElementById("valorTroco");
 const metodoPagamentoSelect = document.getElementById("metodoPagamento");
 const btnConfirmarFinalizacao = document.getElementById("btnConfirmarFinalizacao");
 
-btnFinalizarVenda.addEventListener("click", () => {
-    if (itensVenda.length === 0) {
-        alert("Nenhum item na venda");
-        return;
-    }
-
-    document.getElementById("valorTotalModal").textContent = subtotalVenda.textContent;
-
-    valorRecebidoInput.value = "";
-    valorTrocoTexto.textContent = "R$ 0,00";
-
-    modalPagamento.style.display = "block";
-});
+const extrairValorNumerico = (elemento) => {
+    let texto = elemento.textContent || elemento.value || "0";
+    let limpo = texto.replace("R$ ", "").trim();
+    return parseFloat(limpo) || 0;
+};
 
 valorRecebidoInput.addEventListener("input", () => {
-    const total = parseFloat(subtotalVenda.textContent.replace("R$ ", "").replace(",", "."));
+    const total = extrairValorNumerico(subtotalVenda);
     const recebido = parseFloat(valorRecebidoInput.value) || 0;
     const troco = recebido - total;
 
-    if (troco > 0) {
-        valorTrocoTexto.textContent = `R$ ${troco.toFixed(2)}`;
+    if (recebido >= total) {
+        valorTrocoTexto.textContent = `R$ ${troco.toFixed(2).replace(".", ",")}`;
+        valorTrocoTexto.style.color = "#2ecc71";
     } else {
         valorTrocoTexto.textContent = "R$ 0,00";
+        valorTrocoTexto.style.color = "#e74c3c";
     }
 });
 
 btnConfirmarFinalizacao.addEventListener("click", async () => {
+    const total = extrairValorNumerico(subtotalVenda);
+    const recebido = parseFloat(valorRecebidoInput.value) || 0;
+
+    // Agora o log deve mostrar: Recebido(15) < Total(13) -> Falso (Correto!)
+    console.log(`Verificando: Recebido(${recebido}) < Total(${total})`);
+
+    if (recebido < total) {
+        alert("O valor recebido é menor que o total da venda!");
+        return;
+    }
+
     const payload = {
-        metodo: metodoPagamentoSelect.value
+        metodo: metodoPagamentoSelect.value,
+        valorRecebido: recebido
     };
 
     try {
+        btnConfirmarFinalizacao.disabled = true;
         await apiFinalizarVenda(vendaIdAtual, payload);
         alert("Venda concluída com sucesso!");
         window.location.href = "/pages/awaiting.html";
     } catch (e) {
         alert("Erro ao finalizar: " + e.message);
+        btnConfirmarFinalizacao.disabled = false;
     }
 });
 
-window.addEventListener("click", (event) => {
-    if (event.target === modalPagamento) {
-        modalPagamento.style.display = "none";
+metodoPagamentoSelect.addEventListener("change", () => {
+    if (metodoPagamentoSelect.value !== "DINHEIRO") {
+        const total = extrairValorNumerico(subtotalVenda);
+        valorRecebidoInput.value = total.toFixed(2);
+        valorRecebidoInput.readOnly = true;
+        valorRecebidoInput.dispatchEvent(new Event('input'));
+    } else {
+        valorRecebidoInput.value = "";
+        valorRecebidoInput.readOnly = false;
+        valorRecebidoInput.focus();
     }
 });
 
