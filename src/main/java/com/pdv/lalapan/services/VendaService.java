@@ -5,10 +5,7 @@ import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.entities.Venda;
 import com.pdv.lalapan.entities.VendaItens;
 import com.pdv.lalapan.enums.StatusVenda;
-import com.pdv.lalapan.exceptions.EstoqueInsuficienteException;
-import com.pdv.lalapan.exceptions.ProdutoInexistenteException;
-import com.pdv.lalapan.exceptions.VendaNaoAbertaException;
-import com.pdv.lalapan.exceptions.VendaNaoEncontradaException;
+import com.pdv.lalapan.exceptions.*;
 import com.pdv.lalapan.repositories.ProdutoRepository;
 import com.pdv.lalapan.repositories.VendaRepository;
 import jakarta.transaction.Transactional;
@@ -101,6 +98,16 @@ public class VendaService {
         Venda venda = vendaRepo.findById(vendaId)
                 .orElseThrow(() -> new VendaNaoEncontradaException(vendaId));
 
+        BigDecimal totalVenda = venda.getItens().stream()
+                .map(item -> item.getPrecoUnitario().multiply(new BigDecimal(item.getQuantidade())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        if (dto.valorRecebido().compareTo(totalVenda) < 0) {
+            throw new ValorInsuficienteException(dto.valorRecebido(), totalVenda);
+        }
+
+        BigDecimal troco = dto.valorRecebido().subtract(totalVenda);
+
         venda.fechar(dto.metodo());
 
         for (VendaItens item : venda.getItens()) {
@@ -117,7 +124,8 @@ public class VendaService {
 
         Venda vendaFinalizada = vendaRepo.save(venda);
         return new VendaFinalizadaResponseDTO(
-                vendaFinalizada.getId()
+                vendaFinalizada.getId(),
+                troco
         );
     }
 

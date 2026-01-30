@@ -1,4 +1,6 @@
 package com.pdv.lalapan.dto;
 
-public record VendaFinalizadaResponseDTO(Long idVenda) {
+import java.math.BigDecimal;
+
+public record VendaFinalizadaResponseDTO(Long idVenda, BigDecimal troco) {
 }

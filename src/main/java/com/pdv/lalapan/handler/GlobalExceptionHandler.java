@@ -1,9 +1,7 @@
 package com.pdv.lalapan.handler;
 
-import com.pdv.lalapan.exceptions.EstoqueInsuficienteException;
-import com.pdv.lalapan.exceptions.ProdutoInexistenteException;
-import com.pdv.lalapan.exceptions.VendaNaoAbertaException;
-import com.pdv.lalapan.exceptions.VendaNaoEncontradaException;
+import com.pdv.lalapan.exceptions.*;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -52,6 +50,17 @@ public class GlobalExceptionHandler {
                 null
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
+    }
+
+    @ExceptionHandler(ValorInsuficienteException.class)
+    public ResponseEntity<ErroResponse> handlerValorInsuficiente(ValorInsuficienteException e) {
+        ErroResponse erro = new ErroResponse(
+                e.getMessage(),
+                LocalDateTime.now(),
+                409,
+                null
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
     }
 
     @ExceptionHandler(VendaNaoAbertaException.class)

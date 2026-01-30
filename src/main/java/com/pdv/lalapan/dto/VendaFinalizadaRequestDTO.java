@@ -2,5 +2,7 @@ package com.pdv.lalapan.dto;
 
 import com.pdv.lalapan.enums.MetodoPagamento;
 
-public record VendaFinalizadaRequestDTO(MetodoPagamento metodo) {
+import java.math.BigDecimal;
+
+public record VendaFinalizadaRequestDTO(MetodoPagamento metodo, BigDecimal valorRecebido) {
 }
