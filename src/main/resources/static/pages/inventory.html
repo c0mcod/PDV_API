@@ -68,7 +68,7 @@
             <div class="toolbar-actions">
                 <button class="btn-toolbar btn-filtro">🔽 Filtros</button>
                 <button class="btn-toolbar btn-exportar">📊 Exportar</button>
-                <button class="btn-toolbar btn-novo">+ Novo Produto</button>
+                <button class="btn-toolbar btn-novo" id="btnNovoProduto">+ Novo Produto</button>
             </div>
         </div>
 
@@ -87,220 +87,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>
-                        <div class="product-code">001</div>
-                    </td>
-                    <td>
-                        <div class="product-name">Coca-Cola 2L</div>
-                    </td>
-                    <td>
-                        <span class="category-badge">Bebidas</span>
-                    </td>
-                    <td>45 unidades</td>
-                    <td>
-                        <span class="stock-status stock-ok">Em Estoque</span>
-                    </td>
-                    <td>
-                        <div class="price-value">R$ 8,50</div>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-action btn-detalhes">Ver</button>
-                            <button class="btn-action btn-editar">Editar</button>
-                            <button class="btn-action btn-excluir">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
 
-                <tr>
-                    <td>
-                        <div class="product-code">002</div>
-                    </td>
-                    <td>
-                        <div class="product-name">Arroz Tio João 5kg</div>
-                    </td>
-                    <td>
-                        <span class="category-badge">Alimentos</span>
-                    </td>
-                    <td>30 unidades</td>
-                    <td>
-                        <span class="stock-status stock-ok">Em Estoque</span>
-                    </td>
-                    <td>
-                        <div class="price-value">R$ 25,90</div>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-action btn-detalhes">Ver</button>
-                            <button class="btn-action btn-editar">Editar</button>
-                            <button class="btn-action btn-excluir">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="product-code">003</div>
-                    </td>
-                    <td>
-                        <div class="product-name">Feijão Preto 1kg</div>
-                    </td>
-                    <td>
-                        <span class="category-badge">Alimentos</span>
-                    </td>
-                    <td>12 unidades</td>
-                    <td>
-                        <span class="stock-status stock-baixo">Estoque Baixo</span>
-                    </td>
-                    <td>
-                        <div class="price-value">R$ 7,80</div>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-action btn-detalhes">Ver</button>
-                            <button class="btn-action btn-editar">Editar</button>
-                            <button class="btn-action btn-excluir">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="product-code">004</div>
-                    </td>
-                    <td>
-                        <div class="product-name">Óleo de Soja 900ml</div>
-                    </td>
-                    <td>
-                        <span class="category-badge">Alimentos</span>
-                    </td>
-                    <td>3 unidades</td>
-                    <td>
-                        <span class="stock-status stock-critico">Crítico</span>
-                    </td>
-                    <td>
-                        <div class="price-value">R$ 6,90</div>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-action btn-detalhes">Ver</button>
-                            <button class="btn-action btn-editar">Editar</button>
-                            <button class="btn-action btn-excluir">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="product-code">005</div>
-                    </td>
-                    <td>
-                        <div class="product-name">Açúcar União 1kg</div>
-                    </td>
-                    <td>
-                        <span class="category-badge">Alimentos</span>
-                    </td>
-                    <td>80 unidades</td>
-                    <td>
-                        <span class="stock-status stock-ok">Em Estoque</span>
-                    </td>
-                    <td>
-                        <div class="price-value">R$ 4,50</div>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-action btn-detalhes">Ver</button>
-                            <button class="btn-action btn-editar">Editar</button>
-                            <button class="btn-action btn-excluir">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="product-code">006</div>
-                    </td>
-                    <td>
-                        <div class="product-name">Café Pilão 500g</div>
-                    </td>
-                    <td>
-                        <span class="category-badge">Alimentos</span>
-                    </td>
-                    <td>40 unidades</td>
-                    <td>
-                        <span class="stock-status stock-ok">Em Estoque</span>
-                    </td>
-                    <td>
-                        <div class="price-value">R$ 12,90</div>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-action btn-detalhes">Ver</button>
-                            <button class="btn-action btn-editar">Editar</button>
-                            <button class="btn-action btn-excluir">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="product-code">007</div>
-                    </td>
-                    <td>
-                        <div class="product-name">Leite Integral 1L</div>
-                    </td>
-                    <td>
-                        <span class="category-badge">Bebidas</span>
-                    </td>
-                    <td>55 unidades</td>
-                    <td>
-                        <span class="stock-status stock-ok">Em Estoque</span>
-                    </td>
-                    <td>
-                        <div class="price-value">R$ 5,20</div>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-action btn-detalhes">Ver</button>
-                            <button class="btn-action btn-editar">Editar</button>
-                            <button class="btn-action btn-excluir">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="product-code">008</div>
-                    </td>
-                    <td>
-                        <div class="product-name">Macarrão Barilla 500g</div>
-                    </td>
-                    <td>
-                        <span class="category-badge">Alimentos</span>
-                    </td>
-                    <td>70 unidades</td>
-                    <td>
-                        <span class="stock-status stock-ok">Em Estoque</span>
-                    </td>
-                    <td>
-                        <div class="price-value">R$ 4,80</div>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-action btn-detalhes">Ver</button>
-                            <button class="btn-action btn-editar">Editar</button>
-                            <button class="btn-action btn-excluir">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
                 </tbody>
             </table>
         </div>
 
         <!-- Rodapé -->
         <div class="footer">
-            <div>Mostrando 1-8 de 247 produtos</div>
+            <div>Mostrando produtos</div>
             <div class="pagination">
                 <button class="page-btn">◀</button>
                 <button class="page-btn active">1</button>
@@ -313,5 +107,71 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Cadastro de Produto -->
+<div id="modalProduto" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>📦 Novo Produto</h2>
+            <span class="modal-close">&times;</span>
+        </div>
+        <form id="formProduto">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nome do Produto *</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+                <div class="form-group">
+                    <label>Código de Barras *</label>
+                    <input type="text" id="codigo" name="codigo" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Preço de Venda *</label>
+                    <input type="number" id="preco" name="preco" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Categoria *</label>
+                    <input type="text" id="categoria" name="categoria" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Quantidade em Estoque *</label>
+                    <input type="number" id="quantidadeEstoque" name="quantidadeEstoque" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Estoque Mínimo *</label>
+                    <input type="number" id="estoqueMinimo" name="estoqueMinimo" step="0.01" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Unidade *</label>
+                    <select id="unidade" name="unidade" required>
+                        <option value="">Selecione</option>
+                        <option value="UN">Unidade (UN)</option>
+                        <option value="KG">Quilograma (KG)</option>
+                        <option value="LT">Litro (LT)</option>
+                        <option value="CX">Caixa (CX)</option>
+                        <option value="PC">Pacote (PC)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancelar">Cancelar</button>
+                <button type="submit" class="btn-salvar">Salvar Produto</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script src="../js/inventory.js"></script>
 </body>
 </html>

@@ -12,6 +12,18 @@ async function apiGetProducts() {
   return response.json();
 }
 
+async function apiDeleteProducts(id) {
+  const response = await fetch(`${API_BASE_URL}/${id}`, {
+    method: "DELETE"
+  });
+
+  if (!response.ok) {
+    throw new Error("Erro ao deletar produto");
+  }
+  return;
+}
+
+
 async function apiCreateProduct(product) {
   const response = await fetch(`${API_BASE_URL}/produto`, {
     method: "POST",
