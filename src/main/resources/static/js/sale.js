@@ -195,7 +195,7 @@ function renderizarItens() {
     `;
 
     div.querySelector(".btn-remove-item")
-       .addEventListener("click", () => removerItem(index));
+      .addEventListener("click", () => removerItem(index));
 
     listaItensVenda.appendChild(div);
   });
@@ -257,69 +257,69 @@ const metodoPagamentoSelect = document.getElementById("metodoPagamento");
 const btnConfirmarFinalizacao = document.getElementById("btnConfirmarFinalizacao");
 
 const extrairValorNumerico = (elemento) => {
-    let texto = elemento.textContent || elemento.value || "0";
-    let limpo = texto.replace("R$ ", "").trim();
-    return parseFloat(limpo) || 0;
+  let texto = elemento.textContent || elemento.value || "0";
+  let limpo = texto.replace("R$ ", "").trim();
+  return parseFloat(limpo) || 0;
 };
 
 valorRecebidoInput.addEventListener("input", () => {
-    const total = extrairValorNumerico(subtotalVenda);
-    const recebido = parseFloat(valorRecebidoInput.value) || 0;
-    const troco = recebido - total;
+  const total = extrairValorNumerico(subtotalVenda);
+  const recebido = parseFloat(valorRecebidoInput.value) || 0;
+  const troco = recebido - total;
 
-    if (recebido >= total) {
-        valorTrocoTexto.textContent = `R$ ${troco.toFixed(2).replace(".", ",")}`;
-        valorTrocoTexto.style.color = "#2ecc71";
-    } else {
-        valorTrocoTexto.textContent = "R$ 0,00";
-        valorTrocoTexto.style.color = "#e74c3c";
-    }
+  if (recebido >= total) {
+    valorTrocoTexto.textContent = `R$ ${troco.toFixed(2).replace(".", ",")}`;
+    valorTrocoTexto.style.color = "#2ecc71";
+  } else {
+    valorTrocoTexto.textContent = "R$ 0,00";
+    valorTrocoTexto.style.color = "#e74c3c";
+  }
 });
 
 btnConfirmarFinalizacao.addEventListener("click", async () => {
-    const total = extrairValorNumerico(subtotalVenda);
-    const recebido = parseFloat(valorRecebidoInput.value) || 0;
+  const total = extrairValorNumerico(subtotalVenda);
+  const recebido = parseFloat(valorRecebidoInput.value) || 0;
 
-    // Agora o log deve mostrar: Recebido(15) < Total(13) -> Falso (Correto!)
-    console.log(`Verificando: Recebido(${recebido}) < Total(${total})`);
+  // Agora o log deve mostrar: Recebido(15) < Total(13) -> Falso (Correto!)
+  console.log(`Verificando: Recebido(${recebido}) < Total(${total})`);
 
-    if (recebido < total) {
-        alert("O valor recebido é menor que o total da venda!");
-        return;
-    }
+  if (recebido < total) {
+    alert("O valor recebido é menor que o total da venda!");
+    return;
+  }
 
-    const payload = {
-        metodo: metodoPagamentoSelect.value,
-        valorRecebido: recebido
-    };
+  const payload = {
+    metodo: metodoPagamentoSelect.value,
+    valorRecebido: recebido
+  };
 
-    try {
-        btnConfirmarFinalizacao.disabled = true;
-        await apiFinalizarVenda(vendaIdAtual, payload);
-        alert("Venda concluída com sucesso!");
-        window.location.href = "/pages/awaiting.html";
-    } catch (e) {
-        alert("Erro ao finalizar: " + e.message);
-        btnConfirmarFinalizacao.disabled = false;
-    }
+  try {
+    btnConfirmarFinalizacao.disabled = true;
+    await apiFinalizarVenda(vendaIdAtual, payload);
+    alert("Venda concluída com sucesso!");
+    window.location.href = "/pages/awaiting.html";
+  } catch (e) {
+    alert("Erro ao finalizar: " + e.message);
+    btnConfirmarFinalizacao.disabled = false;
+  }
 });
 
 metodoPagamentoSelect.addEventListener("change", () => {
-    if (metodoPagamentoSelect.value !== "DINHEIRO") {
-        const total = extrairValorNumerico(subtotalVenda);
-        valorRecebidoInput.value = total.toFixed(2);
-        valorRecebidoInput.readOnly = true;
-        valorRecebidoInput.dispatchEvent(new Event('input'));
-    } else {
-        valorRecebidoInput.value = "";
-        valorRecebidoInput.readOnly = false;
-        valorRecebidoInput.focus();
-    }
+  if (metodoPagamentoSelect.value !== "DINHEIRO") {
+    const total = extrairValorNumerico(subtotalVenda);
+    valorRecebidoInput.value = total.toFixed(2);
+    valorRecebidoInput.readOnly = true;
+    valorRecebidoInput.dispatchEvent(new Event('input'));
+  } else {
+    valorRecebidoInput.value = "";
+    valorRecebidoInput.readOnly = false;
+    valorRecebidoInput.focus();
+  }
 });
 
 document.addEventListener("keydown", (e) => {
-    if (modalPagamento.style.display === "block") {
-        if (e.key === "Escape") modalPagamento.style.display = "none";
-        if (e.key === "Enter") btnConfirmarFinalizacao.click();
-    }
+  if (modalPagamento.style.display === "block") {
+    if (e.key === "Escape") modalPagamento.style.display = "none";
+    if (e.key === "Enter") btnConfirmarFinalizacao.click();
+  }
 });
