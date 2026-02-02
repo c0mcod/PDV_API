@@ -48,7 +48,6 @@ public class VendaService {
 
     @Transactional
     public VendaAddItemResponseDTO adicionarItem(Long vendaId, VendaAddItemRequestDTO dto) {
-
         // Verifica se venda existe
         Venda venda = vendaRepo.findById(vendaId)
                 .orElseThrow(() -> new VendaNaoEncontradaException(vendaId));
@@ -76,10 +75,12 @@ public class VendaService {
         venda.adicionarItem(item);
 
         Venda vendaSalva = vendaRepo.save(venda);
+        VendaItens itemSalvo = vendaSalva.getItens().get(vendaSalva.getItens().size() - 1);
 
         return new VendaAddItemResponseDTO(
                 vendaSalva.getId(),
-                vendaSalva.getValorTotal()
+                vendaSalva.getValorTotal(),
+                itemSalvo.getId()
         );
     }
 
