@@ -1,9 +1,6 @@
 package com.pdv.lalapan.controllers;
 
-import com.pdv.lalapan.dto.EntradaProdutoRequestDTO;
-import com.pdv.lalapan.dto.ProdutoCreatedDTO;
-import com.pdv.lalapan.dto.ProdutoEstoqueBaixoDTO;
-import com.pdv.lalapan.dto.ProdutoResponseDTO;
+import com.pdv.lalapan.dto.*;
 import com.pdv.lalapan.services.ProdutoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +21,12 @@ public class ProdutoController {
     @PostMapping
     public ResponseEntity<ProdutoResponseDTO> create(@RequestBody ProdutoCreatedDTO dto) {
         ProdutoResponseDTO response = produtoService.create(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/atualiza/{produtoId}")
+    public ResponseEntity<ProdutoAtualizadoDTO> updateProduct(@RequestBody ProdutoAtualizadoDTO dto, @PathVariable Long produtoId) {
+        ProdutoAtualizadoDTO response = produtoService.atualizarProduto(produtoId, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
