@@ -149,10 +149,8 @@ async function excluirProduto(produtoId) {
         return;
     }
     
-    alert('Funcionalidade de exclusão será implementada');
-    // Implementar quando tiver o endpoint de DELETE no backend
-    // await fetch(`${API_BASE_URL}/produto/${produtoId}`, { method: 'DELETE' });
-    // await carregarProdutos();
+    await fetch(`${API_BASE_URL}/produto/${produtoId}`, { method: 'DELETE' });
+    await carregarProdutos();
 }
 
 // ===================================
