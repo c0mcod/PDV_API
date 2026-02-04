@@ -13,7 +13,7 @@ async function apiGetProducts() {
 }
 
 async function apiDeleteProducts(id) {
-  const response = await fetch(`${API_BASE_URL}/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/produto/${id}`, {
     method: "DELETE"
   });
 

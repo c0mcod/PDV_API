@@ -60,7 +60,7 @@ function renderizarProdutos(produtos) {
             </td>
             <td>
                 <div class="action-buttons">
-                    <button class="btn-action btn-detalhes" onclick="verDetalhes(${produto.id})">Ver</button>
+                    <button class="btn-action btn-detalhes" onclick="verDetalhes(${produto.id})">Entrada</button>
                     <button class="btn-action btn-editar" onclick="editarProduto(${produto.id})">Editar</button>
                     <button class="btn-action btn-excluir" onclick="excluirProduto(${produto.id})">Excluir</button>
                 </div>
