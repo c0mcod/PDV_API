@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public record ProdutoResponseDTO(
         Long id,
         String codigo,
-        double quantidadeEstoque,
+        BigDecimal quantidadeEstoque,
         String nome, BigDecimal preco,
         Unidade unidade,
         Categoria categoria) {
