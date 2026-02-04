@@ -5,9 +5,9 @@ import java.math.BigDecimal;
 public class EstoqueInsuficienteException extends RuntimeException{
     private String nomeProduto;
     private BigDecimal quantidade;
-    private Double quantidadeEstoque;
+    private BigDecimal quantidadeEstoque;
 
-    public EstoqueInsuficienteException(String nomeProduto, BigDecimal quantidade, Double quantidadeEstoque) {
+    public EstoqueInsuficienteException(String nomeProduto, BigDecimal quantidade, BigDecimal quantidadeEstoque) {
         super(String.format(
                 "Estoque insuficiente para o produto '%s'. Solicitado: %d, Disponível: %.2f",
                 nomeProduto, quantidade, quantidadeEstoque
@@ -25,7 +25,7 @@ public class EstoqueInsuficienteException extends RuntimeException{
         return quantidade;
     }
 
-    public Double getQuantidadeEstoque() {
+    public BigDecimal getQuantidadeEstoque() {
         return quantidadeEstoque;
     }
 }

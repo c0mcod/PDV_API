@@ -65,7 +65,7 @@ public class VendaService {
         item.setProduto(produto);
         item.setQuantidade(dto.quantidade());
 
-        if (item.getQuantidade().compareTo(BigDecimal.valueOf(produto.getQuantidadeEstoque())) > 0) {
+        if (item.getQuantidade().compareTo(produto.getQuantidadeEstoque()) > 0) {
             System.out.println("AVISO: Adicionando mais itens que o estoque disponível!");
         }
 
@@ -114,12 +114,12 @@ public class VendaService {
         for (VendaItens item : venda.getItens()) {
             Produto produto = item.getProduto();
 
-            if (validarEstoque && item.getQuantidade().compareTo(BigDecimal.valueOf(produto.getQuantidadeEstoque())) > 0) {
+            if (validarEstoque && item.getQuantidade().compareTo(produto.getQuantidadeEstoque()) > 0) {
                 throw new EstoqueInsuficienteException(produto.getNome(), item.getQuantidade(), produto.getQuantidadeEstoque());
             }
 
             produto.setQuantidadeEstoque(
-                    BigDecimal.valueOf(produto.getQuantidadeEstoque()).subtract(item.getQuantidade()).doubleValue()
+                    produto.getQuantidadeEstoque().subtract(item.getQuantidade())
             );
         }
 
