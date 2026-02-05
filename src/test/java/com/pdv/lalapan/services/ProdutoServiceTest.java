@@ -1,7 +1,7 @@
 package com.pdv.lalapan.services;
 
-import com.pdv.lalapan.dto.EntradaProdutoRequestDTO;
-import com.pdv.lalapan.dto.ProdutoEstoqueBaixoDTO;
+import com.pdv.lalapan.dto.produto.EntradaProdutoRequestDTO;
+import com.pdv.lalapan.dto.produto.ProdutoEstoqueBaixoDTO;
 import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.enums.Categoria;
 import com.pdv.lalapan.enums.Unidade;

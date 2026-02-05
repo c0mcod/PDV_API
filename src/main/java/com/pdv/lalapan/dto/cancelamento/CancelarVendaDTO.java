@@ -1,4 +1,4 @@
-package com.pdv.lalapan.dto;
+package com.pdv.lalapan.dto.cancelamento;
 
 import com.pdv.lalapan.enums.StatusVenda;
 

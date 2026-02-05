@@ -1,4 +1,4 @@
-package com.pdv.lalapan.dto;
+package com.pdv.lalapan.dto.venda;
 
 public record VendaAberturaDTO(Long vendaId) {
 

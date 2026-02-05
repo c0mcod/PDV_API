@@ -1,4 +1,4 @@
-package com.pdv.lalapan.dto;
+package com.pdv.lalapan.dto.produto;
 
 import com.pdv.lalapan.entities.Produto;
 

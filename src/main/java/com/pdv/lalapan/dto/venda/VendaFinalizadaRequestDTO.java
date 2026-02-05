@@ -1,4 +1,4 @@
-package com.pdv.lalapan.dto;
+package com.pdv.lalapan.dto.venda;
 
 import com.pdv.lalapan.enums.MetodoPagamento;
 

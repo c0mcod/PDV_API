@@ -1,6 +1,6 @@
 package com.pdv.lalapan.controllers;
 
-import com.pdv.lalapan.dto.*;
+import com.pdv.lalapan.dto.produto.*;
 import com.pdv.lalapan.services.ProdutoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

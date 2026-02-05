@@ -1,6 +1,6 @@
 package com.pdv.lalapan.services;
 
-import com.pdv.lalapan.dto.*;
+import com.pdv.lalapan.dto.produto.*;
 import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.exceptions.ProdutoInexistenteException;
 import com.pdv.lalapan.repositories.ProdutoRepository;

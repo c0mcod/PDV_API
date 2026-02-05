@@ -1,7 +1,4 @@
-package com.pdv.lalapan.dto;
-
-import com.pdv.lalapan.entities.Venda;
-import com.pdv.lalapan.entities.VendaItens;
+package com.pdv.lalapan.dto.venda;
 
 import java.math.BigDecimal;
 
