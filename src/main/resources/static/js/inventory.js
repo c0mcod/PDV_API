@@ -63,7 +63,7 @@ function renderizarProdutos(produtos) {
                 <div class="action-buttons">
                     <button class="btn-action btn-entrada" onclick="abrirModalEntrada(${produto.id})">Entrada</button>
                     <button class="btn-action btn-editar" onclick="editarProduto(${produto.id})">Editar</button>
-                    <button class="btn-action btn-excluir" onclick="excluirProduto(${produto.id})">Excluir</button>
+                    <button class="btn-action btn-excluir" onclick="confirmarExclusao(${produto.id})">Excluir</button>
                 </div>
             </td>
         </tr>
@@ -146,10 +146,6 @@ function editarProduto(produtoId) {
 }
 
 async function excluirProduto(produtoId) {
-    if (!confirm('Tem certeza que deseja excluir este produto?')) {
-        return;
-    }
-    
     await fetch(`${API_BASE_URL}/produto/${produtoId}`, { method: 'DELETE' });
     await carregarProdutos();
 }
@@ -375,3 +371,25 @@ async function registrarEntrada() {
         alert('Erro ao registrar entrada: ' + error.message);
     }
 }
+
+// ===================================
+// FUNÇÕES DO MODAL DE EXCLUSÃO
+// ===================================
+let produtoParaExcluir = null;
+
+function confirmarExclusao(produtoId) {
+    produtoParaExcluir = produtoId;
+    document.getElementById('modal-confirmar-exclusao').style.display = 'flex';
+}
+
+function fecharModal() {
+    document.getElementById('modal-confirmar-exclusao').style.display = 'none';
+    produtoParaExcluir = null;
+}
+
+document.getElementById('btn-confirmar-exclusao').onclick = async () => {
+    if (produtoParaExcluir) {
+        await excluirProduto(produtoParaExcluir);
+        fecharModal();
+    }
+};
