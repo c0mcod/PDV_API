@@ -134,3 +134,47 @@ async function apiCancelarVenda(vendaId) {
 
   return response.json();
 }
+
+/* =======================
+   RELATÓRIOS
+======================= */
+
+async function apiGetKpis(periodo) {
+  const response = await fetch(`${API_BASE_URL}/api/relatorios/kpis?periodo=${periodo}`);
+  if(!response.ok) {
+    throw new Error("Erro ao buscar KPIs");
+  }
+  return response.json();
+}
+
+async function apiGetVendasDiaSemana(periodo) {
+  const response = await fetch(`${API_BASE_URL}/api/relatorios/vendas-dia-semana?periodo=${periodo}`);
+  if(!response.ok) {
+    throw new Error("Erro ao buscar vendas por dia");
+  }
+  return response.json();
+}
+
+async function apiGetTopProdutos(periodo, limite = 5) {
+  const response = await fetch(`${API_BASE_URL}/api/relatorios/top-produtos?periodo=${periodo}&limite=${limite}`);
+  if(!response.ok) {
+    throw new Error("Erro ao buscar top produtos");
+  }
+  return response.json();
+}
+
+async function apiGetVendasCategoria(periodo) {
+  const response = await fetch(`${API_BASE_URL}/api/relatorios/vendas-categoria?periodo=${periodo}`);
+  if(!response.ok) {
+    throw new Error("Erro ao buscar vendas por categoria");
+  }
+  return response.json();
+}
+
+async function apiGetMetricasDesempenho(periodo) {
+  const response = await fetch(`${API_BASE_URL}/api/relatorios/metricas-desempenho?periodo=${periodo}`);
+  if(!response.ok) {
+    throw new Error("Erro ao buscar métricas");
+  }
+  return response.json();
+}

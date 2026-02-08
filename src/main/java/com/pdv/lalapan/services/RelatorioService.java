@@ -36,26 +36,39 @@ public class RelatorioService {
 
         List<KpiDTO> kpis = new ArrayList<>();
 
-        // Calcular período anterior (para comparação)
-        long dias = ChronoUnit.DAYS.between(dataHoraInicio, dataHoraFim);
-        LocalDateTime periodoAnteriorInicio = dataHoraInicio.minusDays(dias + 1);
-        LocalDateTime periodoAnteriorFim = dataHoraInicio.minusDays(1);
+        long dias = ChronoUnit.DAYS.between(dataHoraInicio.toLocalDate(), dataHoraFim.toLocalDate());
+        if (dias == 0) dias = 1;
+
+        LocalDateTime periodoAnteriorInicio = dataHoraInicio.minusDays(dias);
+        LocalDateTime periodoAnteriorFim = dataHoraInicio.minusSeconds(1);
 
         // KPI 1: Faturamento
         BigDecimal faturamento = vendaRepo.calcularFaturamentoPorPeriodo(dataHoraInicio, dataHoraFim);
+        faturamento = faturamento != null ? faturamento : BigDecimal.ZERO;
+
         BigDecimal faturamentoAnterior = vendaRepo.calcularFaturamentoPorPeriodo(periodoAnteriorInicio, periodoAnteriorFim);
+        faturamentoAnterior = faturamentoAnterior != null ? faturamentoAnterior : BigDecimal.ZERO;
+
         BigDecimal percentualFaturamento = calcularPercentual(faturamento, faturamentoAnterior);
         kpis.add(new KpiDTO("Faturamento", formatarValor(faturamento), percentualFaturamento));
 
         // KPI 2: Vendas
         Long vendas = vendaRepo.contarVendasPorPeriodo(dataHoraInicio, dataHoraFim);
+        vendas = vendas != null ? vendas : 0L;
+
         Long vendasAnterior = vendaRepo.contarVendasPorPeriodo(periodoAnteriorInicio, periodoAnteriorFim);
+        vendasAnterior = vendasAnterior != null ? vendasAnterior : 0L;
+
         BigDecimal percentualVendas = calcularPercentual(vendas, vendasAnterior);
         kpis.add(new KpiDTO("Vendas", vendas.toString(), percentualVendas));
 
         // KPI 3: Produtos Vendidos
         Long produtosVendidos = vendaRepo.contarProdutosVendidos(dataHoraInicio, dataHoraFim);
+        produtosVendidos = produtosVendidos != null ? produtosVendidos : 0L;
+
         Long produtosVendidosAnterior = vendaRepo.contarProdutosVendidos(periodoAnteriorInicio, periodoAnteriorFim);
+        produtosVendidosAnterior = produtosVendidosAnterior != null ? produtosVendidosAnterior : 0L;
+
         BigDecimal percentualProdutos = calcularPercentual(produtosVendidos, produtosVendidosAnterior);
         kpis.add(new KpiDTO("Produtos Vendidos", produtosVendidos.toString(), percentualProdutos));
 
@@ -132,8 +145,13 @@ public class RelatorioService {
         List<CategoriaSalesDTO> categorias = new ArrayList<>();
 
         for (Object[] row : resultado) {
+            System.out.println("Tipo do row[0]: " + row[0].getClass().getName());
+            System.out.println("Valor do row[0]: " + row[0]);
+
             Categoria categoriaEnum = (Categoria) row[0];
-            String nomeCategoria = categoriaEnum.name();
+            String nomeCategoria = categoriaEnum.getDescricao();
+
+            System.out.println("Nome da categoria: " + nomeCategoria);
 
             BigDecimal valorVendas = (BigDecimal) row[1];
             BigDecimal percentual = totalGeral.compareTo(BigDecimal.ZERO) > 0

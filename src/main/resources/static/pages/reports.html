@@ -1,297 +1,147 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LalaPDV - Relatórios e Estatísticas</title>
   <link rel="stylesheet" href="../css/reports.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
-<!-- Cabeçalho -->
-<div class="header">
-  <div class="header-left">
-    <div class="logo">LalaPDV</div>
-    <div class="page-title">Relatórios e Estatísticas</div>
-  </div>
-  <div class="header-right">
-    <div class="user-info">👤 Admin</div>
-    <button class="close-btn">✕</button>
-  </div>
-</div>
-
-<!-- Container Principal -->
-<div class="main-container">
-  <!-- Banner Lateral Esquerdo -->
-  <div class="left-banner">
-    <div class="banner-content">
-      <div class="banner-logo">📊</div>
-      <div class="banner-title">RELATÓRIOS</div>
-      <div class="banner-subtitle">Análise de Dados</div>
+  <!-- Cabeçalho -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">LalaPDV</div>
+      <div class="page-title">Relatórios e Estatísticas</div>
     </div>
-
-    <!-- Filtros de Período -->
-    <div class="period-filters">
-      <div class="filter-title">📅 Período</div>
-      <div class="filter-options">
-        <button class="filter-btn">Hoje</button>
-        <button class="filter-btn">Últimos 7 dias</button>
-        <button class="filter-btn active">Últimos 30 dias</button>
-        <button class="filter-btn">Este Mês</button>
-        <button class="filter-btn">Mês Anterior</button>
-        <button class="filter-btn">Este Ano</button>
-        <button class="filter-btn">Personalizado</button>
-      </div>
-    </div>
-
-    <!-- Resumo Rápido -->
-    <div class="quick-summary">
-      <div class="summary-item">
-        <div class="summary-label">Período Selecionado</div>
-        <div class="summary-value">Jan 2026</div>
-      </div>
-      <div class="summary-item">
-        <div class="summary-label">Total de Vendas</div>
-        <div class="summary-value">1.247</div>
-      </div>
-      <div class="summary-item">
-        <div class="summary-label">Ticket Médio</div>
-        <div class="summary-value">R$ 87,35</div>
-      </div>
+    <div class="header-right">
+      <div class="user-info">👤 Admin</div>
+      <button class="close-btn">✕</button>
     </div>
   </div>
 
-  <!-- Painel Direito -->
-  <div class="right-panel">
-    <!-- Cards de KPIs -->
-    <div class="kpi-cards">
-      <div class="kpi-card">
-        <div class="kpi-icon">💰</div>
-        <div class="kpi-label">Faturamento</div>
-        <div class="kpi-value">R$ 108.9K</div>
-        <div class="kpi-change change-positive">↑ 12.5% vs mês anterior</div>
+  <!-- Container Principal -->
+  <div class="main-container">
+    <!-- Banner Lateral Esquerdo -->
+    <div class="left-banner">
+      <div class="banner-content">
+        <div class="banner-logo">📊</div>
+        <div class="banner-title">RELATÓRIOS</div>
+        <div class="banner-subtitle">Análise de Dados</div>
       </div>
 
-      <div class="kpi-card">
-        <div class="kpi-icon">🛒</div>
-        <div class="kpi-label">Vendas</div>
-        <div class="kpi-value">1.247</div>
-        <div class="kpi-change change-positive">↑ 8.3% vs mês anterior</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-icon">📦</div>
-        <div class="kpi-label">Produtos Vendidos</div>
-        <div class="kpi-value">3.892</div>
-        <div class="kpi-change change-positive">↑ 15.2% vs mês anterior</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-icon">🕐</div>
-        <div class="kpi-label">Transações/Hora</div>
-        <div class="kpi-value">52</div>
-        <div class="kpi-change change-positive">↑ 6.8% vs mês anterior</div>
-      </div>
-    </div>
-
-    <!-- Seção de Gráficos -->
-    <div class="charts-section">
-      <!-- Gráfico de Vendas -->
-      <div class="chart-card">
-        <div class="chart-title">📈 Vendas por Dia da Semana</div>
-        <div class="bar-chart">
-          <div class="bar-item">
-            <div class="bar" style="height: 65%;">
-              <div class="bar-value">R$ 12.5K</div>
-            </div>
-            <div class="bar-label">Seg</div>
-          </div>
-          <div class="bar-item">
-            <div class="bar" style="height: 72%;">
-              <div class="bar-value">R$ 14.2K</div>
-            </div>
-            <div class="bar-label">Ter</div>
-          </div>
-          <div class="bar-item">
-            <div class="bar" style="height: 85%;">
-              <div class="bar-value">R$ 17.8K</div>
-            </div>
-            <div class="bar-label">Qua</div>
-          </div>
-          <div class="bar-item">
-            <div class="bar" style="height: 78%;">
-              <div class="bar-value">R$ 15.9K</div>
-            </div>
-            <div class="bar-label">Qui</div>
-          </div>
-          <div class="bar-item">
-            <div class="bar" style="height: 100%;">
-              <div class="bar-value">R$ 21.3K</div>
-            </div>
-            <div class="bar-label">Sex</div>
-          </div>
-          <div class="bar-item">
-            <div class="bar" style="height: 95%;">
-              <div class="bar-value">R$ 19.7K</div>
-            </div>
-            <div class="bar-label">Sáb</div>
-          </div>
-          <div class="bar-item">
-            <div class="bar" style="height: 55%;">
-              <div class="bar-value">R$ 9.8K</div>
-            </div>
-            <div class="bar-label">Dom</div>
-          </div>
+      <!-- Filtros de Período -->
+      <div class="period-filters">
+        <div class="filter-title">📅 Período</div>
+        <div class="filter-options">
+          <button class="filter-btn">Hoje</button>
+          <button class="filter-btn">Últimos 7 dias</button>
+          <button class="filter-btn active">Últimos 30 dias</button>
+          <button class="filter-btn">Este Mês</button>
+          <button class="filter-btn">Mês Anterior</button>
+          <button class="filter-btn">Este Ano</button>
+          <button class="filter-btn">Personalizado</button>
         </div>
       </div>
 
-      <!-- Top 5 Produtos -->
-      <div class="chart-card">
-        <div class="chart-title">🏆 Top 5 Produtos</div>
-        <div class="top-products">
-          <div class="product-item">
-            <div class="product-rank">1º</div>
-            <div class="product-info">
-              <div class="product-name">Coca-Cola 2L</div>
-              <div class="product-sales">342 vendas</div>
-            </div>
-            <div class="product-value">R$ 2.9K</div>
-          </div>
-
-          <div class="product-item">
-            <div class="product-rank">2º</div>
-            <div class="product-info">
-              <div class="product-name">Arroz Tio João 5kg</div>
-              <div class="product-sales">298 vendas</div>
-            </div>
-            <div class="product-value">R$ 7.7K</div>
-          </div>
-
-          <div class="product-item">
-            <div class="product-rank">3º</div>
-            <div class="product-info">
-              <div class="product-name">Café Pilão 500g</div>
-              <div class="product-sales">256 vendas</div>
-            </div>
-            <div class="product-value">R$ 3.3K</div>
-          </div>
-
-          <div class="product-item">
-            <div class="product-rank">4º</div>
-            <div class="product-info">
-              <div class="product-name">Feijão Preto 1kg</div>
-              <div class="product-sales">189 vendas</div>
-            </div>
-            <div class="product-value">R$ 1.5K</div>
-          </div>
-
-          <div class="product-item">
-            <div class="product-rank">5º</div>
-            <div class="product-info">
-              <div class="product-name">Leite Integral 1L</div>
-              <div class="product-sales">167 vendas</div>
-            </div>
-            <div class="product-value">R$ 868</div>
-          </div>
+      <!-- Resumo Rápido -->
+      <div class="quick-summary">
+        <div class="summary-item">
+          <div class="summary-label">Período Selecionado</div>
+          <div class="summary-value">-</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Total de Vendas</div>
+          <div class="summary-value">-</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Ticket Médio</div>
+          <div class="summary-value">-</div>
         </div>
       </div>
     </div>
 
-    <!-- Seção Inferior -->
-    <div class="bottom-section">
-      <!-- Vendas por Categoria -->
-      <div class="chart-card">
-        <div class="chart-title">📊 Vendas por Categoria</div>
-        <div class="category-table">
-          <div class="category-row header">
-            <div>Categoria</div>
-            <div style="text-align: right;">Vendas</div>
-            <div style="text-align: right;">Participação</div>
+    <!-- Painel Direito -->
+    <div class="right-panel">
+      <!-- Cards de KPIs -->
+      <div class="kpi-cards">
+        <div class="kpi-card">
+          <div class="kpi-icon">💰</div>
+          <div class="kpi-label">Faturamento</div>
+          <div class="kpi-value">-</div>
+          <div class="kpi-change">-</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">🛒</div>
+          <div class="kpi-label">Vendas</div>
+          <div class="kpi-value">-</div>
+          <div class="kpi-change">-</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">📦</div>
+          <div class="kpi-label">Produtos Vendidos</div>
+          <div class="kpi-value">-</div>
+          <div class="kpi-change">-</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">🕐</div>
+          <div class="kpi-label">Transações/Hora</div>
+          <div class="kpi-value">-</div>
+          <div class="kpi-change">-</div>
+        </div>
+      </div>
+
+      <div class="charts-section">
+        <!-- Gráfico de Vendas -->
+        <div class="chart-card">
+          <div class="chart-title">📈 Vendas por Dia da Semana</div>
+          <div class="chart-canvas-container">
+            <canvas id="vendasChart"></canvas>
           </div>
-          <div class="category-row">
-            <div class="category-name">Alimentos</div>
-            <div class="category-value">R$ 48.2K</div>
-            <div class="category-percent">44.3%</div>
-          </div>
-          <div class="category-row">
-            <div class="category-name">Bebidas</div>
-            <div class="category-value">R$ 32.7K</div>
-            <div class="category-percent">30.0%</div>
-          </div>
-          <div class="category-row">
-            <div class="category-name">Higiene</div>
-            <div class="category-value">R$ 15.9K</div>
-            <div class="category-percent">14.6%</div>
-          </div>
-          <div class="category-row">
-            <div class="category-name">Limpeza</div>
-            <div class="category-value">R$ 8.4K</div>
-            <div class="category-percent">7.7%</div>
-          </div>
-          <div class="category-row">
-            <div class="category-name">Outros</div>
-            <div class="category-value">R$ 3.7K</div>
-            <div class="category-percent">3.4%</div>
+        </div>
+
+        <!-- Top 5 Produtos -->
+        <div class="chart-card">
+          <div class="chart-title">🏆 Top 5 Produtos</div>
+          <div class="top-products">
+            <!-- Será preenchido pelo JS -->
           </div>
         </div>
       </div>
 
-      <!-- Métricas de Desempenho -->
-      <div class="chart-card">
-        <div class="chart-title">🎯 Métricas de Desempenho</div>
-        <div class="performance-metrics">
-          <div class="metric-item">
-            <div class="metric-header">
-              <div class="metric-label">Taxa de Conversão</div>
-              <div class="metric-value">68.5%</div>
+      <!-- Seção Inferior -->
+      <div class="bottom-section">
+        <!-- Vendas por Categoria -->
+        <div class="chart-card">
+          <div class="chart-title">📊 Vendas por Categoria</div>
+          <div class="category-table">
+            <div class="category-row header">
+              <div>Categoria</div>
+              <div style="text-align: right;">Vendas</div>
+              <div style="text-align: right;">Participação</div>
             </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 68.5%;"></div>
-            </div>
+            <!-- Será preenchido pelo JS -->
           </div>
+        </div>
 
-          <div class="metric-item">
-            <div class="metric-header">
-              <div class="metric-label">Satisfação do Cliente</div>
-              <div class="metric-value">92.3%</div>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 92.3%;"></div>
-            </div>
-          </div>
-
-          <div class="metric-item">
-            <div class="metric-header">
-              <div class="metric-label">Margem de Lucro</div>
-              <div class="metric-value">34.7%</div>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 34.7%;"></div>
-            </div>
-          </div>
-
-          <div class="metric-item">
-            <div class="metric-header">
-              <div class="metric-label">Giro de Estoque</div>
-              <div class="metric-value">78.9%</div>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 78.9%;"></div>
-            </div>
-          </div>
-
-          <div class="metric-item">
-            <div class="metric-header">
-              <div class="metric-label">Retorno de Produtos</div>
-              <div class="metric-value">2.4%</div>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 2.4%; background: linear-gradient(90deg, #dc3545 0%, #fd7e14 100%);"></div>
-            </div>
+        <!-- Métricas de Desempenho -->
+        <div class="chart-card">
+          <div class="chart-title">🎯 Métricas de Desempenho</div>
+          <div class="performance-metrics">
+            <!-- Será preenchido pelo JS -->
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/reports.js"></script>
 </body>
+
 </html>

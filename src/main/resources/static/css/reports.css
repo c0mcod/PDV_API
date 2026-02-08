@@ -453,6 +453,35 @@ body {
     transition: width 0.3s;
 }
 
+
+.charts-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+    align-items: start; /* ADICIONA ISSO */
+}
+
+.chart-card {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    height: fit-content; /* ADICIONA ISSO */
+}
+
+.chart-canvas-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    overflow: hidden;
+}
+
+#vendasChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
