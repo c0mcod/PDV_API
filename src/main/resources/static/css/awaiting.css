@@ -88,8 +88,8 @@ body {
     background-color: white;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centraliza horizontalmente */
-    justify-content: center; /* Centraliza verticalmente */
+    align-items: center;
+    justify-content: center;
     padding: 30px;
     overflow-y: auto;
 }
@@ -99,11 +99,10 @@ body {
     text-align: center;
     max-width: 480px;
     width: 100%;
-    /* FLEXBOX para garantir alinhamento vertical perfeito */
     display: flex;
     flex-direction: column;
     align-items: center; 
-    gap: 15px; /* Espaçamento padrão entre os elementos */
+    gap: 15px;
 }
 
 /* Status do Caixa */
@@ -118,7 +117,7 @@ body {
     font-size: 13px;
     font-weight: 600;
     border: 1px solid #c3e6cb;
-    margin-bottom: 20px; /* Empurra o ícone para baixo */
+    margin-bottom: 20px;
 }
 
 .status-dot {
@@ -136,11 +135,11 @@ body {
 
 /* Ícone Animado */
 .card-icon {
-    font-size: 120px; /* Ícone grande */
-    color: #2a5298; /* Cor opcional para o ícone não ficar preto padrão */
+    font-size: 120px;
+    color: #2a5298;
     opacity: 0.9;
     margin-bottom: 10px;
-    display: block; /* Garante que ocupe a linha toda */
+    display: block;
     animation: float 3s ease-in-out infinite;
 }
 
@@ -161,9 +160,9 @@ body {
 .card-subtitle {
     font-size: 16px;
     color: #6c757d;
-    max-width: 80%; /* Evita linhas muito longas */
+    max-width: 80%;
     line-height: 1.5;
-    margin-bottom: 40px; /* GRANDE ESPAÇO antes do botão */
+    margin-bottom: 40px;
 }
 
 /* Botão Principal */

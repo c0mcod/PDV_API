@@ -14,7 +14,7 @@ body {
 
 /* --- Modal Corrigido --- */
 .modal {
-    display: none; /* Controlado pelo JS */
+    display: none;
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -23,12 +23,12 @@ body {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(4px);
-    overflow: auto; /* Garante scroll se a tela for muito pequena */
+    overflow: auto;
 }
 
 .modal-content {
     background-color: #fff;
-    margin: 10% auto; /* Centraliza horizontalmente e dá espaço no topo */
+    margin: 10% auto;
     padding: 25px;
     width: 90%;
     max-width: 450px;
@@ -330,11 +330,10 @@ body {
 
 .item-row {
     display: grid;
-    /* Colunas ajustadas para responsividade */
     grid-template-columns: 40px 1fr 100px 100px 120px 50px;
     gap: 15px;
     padding: 12px 15px;
-    background-color: #fff; /* Fundo branco como padrão em listas modernas */
+    background-color: #fff;
     border: 1px solid #e0e0e0;
     border-radius: 6px;
     margin-bottom: 8px;
@@ -410,7 +409,6 @@ body {
     }
     
     .produto-controles {
-        /* Ajusta inputs */
         grid-template-columns: 80px 1fr 110px 110px; 
     }
     
@@ -419,12 +417,12 @@ body {
 
 @media (max-width: 1100px) {
     .main-container {
-        grid-template-columns: 0px 1fr; /* Sidebar colapsa */
+        grid-template-columns: 0px 1fr;
     }
     
     .left-banner { display: none; }
     
     .produto-controles {
-        grid-template-columns: 1fr 1fr; /* Quebra em 2 linhas */
+        grid-template-columns: 1fr 1fr;
     }
 }
