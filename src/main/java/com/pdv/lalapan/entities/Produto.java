@@ -73,7 +73,7 @@ public class Produto {
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        this.nome = nome != null ? nome.toUpperCase().trim() : null;
     }
 
     public BigDecimal getPreco() {
