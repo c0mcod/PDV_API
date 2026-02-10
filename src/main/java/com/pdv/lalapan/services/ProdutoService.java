@@ -23,6 +23,7 @@ public class ProdutoService {
         produto.setNome(dto.nome());
         produto.setCodigo(dto.codigo());
         produto.setCategoria(dto.categoria());
+        produto.setEstoqueMinimo(dto.estoqueMinimo());
         produto.setUnidade(dto.unidade());
         produto.setPreco(dto.preco());
         produto.setQuantidadeEstoque(dto.quantidadeEstoque());
