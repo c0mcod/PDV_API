@@ -67,7 +67,7 @@ public class ProdutoController {
 
     @GetMapping("/exportar/excel")
     public ResponseEntity<byte[]> exportarExcel() throws IOException {
-        List<Produto> produtos = produtoService.findAll();
+        List<Produto> produtos = produtoService.findAllParaExportacao();
 
         byte[] excelBytes = excelExportService.exportarProdutos(produtos);
 

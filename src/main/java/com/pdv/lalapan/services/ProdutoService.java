@@ -67,6 +67,10 @@ public class ProdutoService {
         return prodRepo.findByAtivoTrue();
     }
 
+    public List<Produto> findAllParaExportacao() {
+        return prodRepo.findAll();
+    }
+
     public List<ProdutoResponseDTO> buscarTodosProdutos() {
         return prodRepo.findByAtivoTrue()
                 .stream()
