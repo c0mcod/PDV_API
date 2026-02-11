@@ -54,6 +54,29 @@ async function apiCreateProduct(product) {
   return response.json();
 }
 
+async function apiExportarProdutos() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/produto/exportar/excel`);
+        
+        if (!response.ok) {
+            throw new Error('Erro ao exportar');
+        }
+        
+        const blob = await response.blob();
+       
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'produtos.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao exportar produtos');
+    }
+}
+
 /* =======================
    VENDAS
 ======================= */

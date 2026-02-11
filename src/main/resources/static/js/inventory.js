@@ -398,3 +398,8 @@ document.getElementById('btn-confirmar-exclusao').onclick = async () => {
         fecharModal();
     }
 };
+
+// ===================================
+// BOTÃO DE EXPORTAR PRODUTOS
+// ===================================
+document.getElementById('btn-exportar').addEventListener('click', apiExportarProdutos);
