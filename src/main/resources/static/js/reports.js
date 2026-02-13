@@ -32,19 +32,22 @@ function converterPeriodo(textoBotao) {
 
 async function carregarRelatorios(periodo) {
     try {
-        // Carregar todos os dados em paralelo usando as funções do api.js
-        const [kpis, vendasDiaSemana, topProdutos, vendasCategoria, metricas] = await Promise.all([
+        // Carregar todos os dados em paralelo
+        const [kpis, vendasDiaSemana, topProdutos, vendasCategoria, indicadores, resumoEstoque] = await Promise.all([
             apiGetKpis(periodo),
             apiGetVendasDiaSemana(periodo),
             apiGetTopProdutos(periodo, 5),
             apiGetVendasCategoria(periodo),
+            apiGetIndicadoresFinanceiros(periodo),
+            apiGetResumoEstoque()
         ]);
         
         // Atualizar cada seção
-        atualizarKPIs(kpis);
+        atualizarKPIs(kpis, indicadores);
         atualizarVendasDiaSemana(vendasDiaSemana);
         atualizarTopProdutos(topProdutos);
         atualizarVendasCategoria(vendasCategoria);
+        atualizarResumoEstoque(resumoEstoque);
         
     } catch (error) {
         console.error('Erro ao carregar relatórios:', error);
@@ -52,21 +55,64 @@ async function carregarRelatorios(periodo) {
     }
 }
 
-function atualizarKPIs(kpis) {
+function atualizarKPIs(kpis, indicadores) {
+    // Atualizar os 4 cards originais
     const cards = document.querySelectorAll('.kpi-card');
-    kpis.forEach((kpi, index) => {
-        if (cards[index]) {
-            const valueEl = cards[index].querySelector('.kpi-value');
-            const changeEl = cards[index].querySelector('.kpi-change');
-            
-            valueEl.textContent = kpi.valor;
-            
-            const sinal = kpi.percentualMudanca >= 0 ? '↑' : '↓';
-            const classe = kpi.percentualMudanca >= 0 ? 'change-positive' : 'change-negative';
-            changeEl.textContent = `${sinal} ${Math.abs(kpi.percentualMudanca).toFixed(1)}% vs mês anterior`;
-            changeEl.className = `kpi-change ${classe}`;
-        }
-    });
+    
+    // Card 1: Faturamento (do indicadores)
+    if (cards[0]) {
+        const valueEl = cards[0].querySelector('.kpi-value');
+        const changeEl = cards[0].querySelector('.kpi-change');
+        
+        valueEl.textContent = formatarValor(indicadores.faturamentoTotal);
+        changeEl.textContent = `${indicadores.totalVendas} vendas realizadas`;
+        changeEl.className = 'kpi-change change-neutral';
+    }
+    
+    // Card 2: Lucro Bruto (NOVO)
+    if (cards[1]) {
+        const labelEl = cards[1].querySelector('.kpi-label');
+        const valueEl = cards[1].querySelector('.kpi-value');
+        const changeEl = cards[1].querySelector('.kpi-change');
+        const iconEl = cards[1].querySelector('.kpi-icon');
+        
+        labelEl.textContent = 'Lucro Bruto';
+        iconEl.textContent = '💰';
+        valueEl.textContent = formatarValor(indicadores.lucroBruto);
+        
+        const margemLucro = indicadores.faturamentoTotal > 0 
+            ? (indicadores.lucroBruto / indicadores.faturamentoTotal * 100).toFixed(1)
+            : 0;
+        changeEl.textContent = `Margem: ${margemLucro}%`;
+        changeEl.className = 'kpi-change change-neutral';
+    }
+    
+    // Card 3: Ticket Médio (NOVO)
+    if (cards[2]) {
+        const labelEl = cards[2].querySelector('.kpi-label');
+        const valueEl = cards[2].querySelector('.kpi-value');
+        const changeEl = cards[2].querySelector('.kpi-change');
+        const iconEl = cards[2].querySelector('.kpi-icon');
+        
+        labelEl.textContent = 'Ticket Médio';
+        iconEl.textContent = '🎫';
+        valueEl.textContent = formatarValor(indicadores.ticketMedio);
+        changeEl.textContent = `Por venda realizada`;
+        changeEl.className = 'kpi-change change-neutral';
+    }
+    
+    // Card 4: Mantém original (Produtos Vendidos ou Transações/Hora)
+    if (cards[3] && kpis[2]) {
+        const valueEl = cards[3].querySelector('.kpi-value');
+        const changeEl = cards[3].querySelector('.kpi-change');
+        
+        valueEl.textContent = kpis[2].valor;
+        
+        const sinal = kpis[2].percentualMudanca >= 0 ? '↑' : '↓';
+        const classe = kpis[2].percentualMudanca >= 0 ? 'change-positive' : 'change-negative';
+        changeEl.textContent = `${sinal} ${Math.abs(kpis[2].percentualMudanca).toFixed(1)}% vs mês anterior`;
+        changeEl.className = `kpi-change ${classe}`;
+    }
 }
 
 let vendasChart = null;
@@ -161,8 +207,6 @@ function atualizarTopProdutos(produtos) {
 }
 
 function atualizarVendasCategoria(categorias) {
-    console.log('Categorias recebidas:', categorias);
-    
     const container = document.querySelector('.category-table');
     if (!container) return;
     
@@ -180,6 +224,53 @@ function atualizarVendasCategoria(categorias) {
         `;
         container.appendChild(row);
     });
+}
+
+function atualizarResumoEstoque(resumo) {
+    const container = document.querySelector('.stock-summary');
+    if (!container) return;
+    
+    container.innerHTML = `
+        <div class="stock-card total">
+            <div class="stock-icon">💰</div>
+            <div class="stock-info">
+                <div class="stock-label">Valor Total em Estoque</div>
+                <div class="stock-value">${formatarValor(resumo.valorTotalEstoque)}</div>
+            </div>
+        </div>
+        
+        <div class="stock-card active">
+            <div class="stock-icon">📦</div>
+            <div class="stock-info">
+                <div class="stock-label">Produtos Ativos</div>
+                <div class="stock-value">${resumo.totalProdutosAtivos}</div>
+            </div>
+        </div>
+        
+        <div class="stock-card ok">
+            <div class="stock-icon">✅</div>
+            <div class="stock-info">
+                <div class="stock-label">Estoque OK</div>
+                <div class="stock-value">${resumo.produtosOk}</div>
+            </div>
+        </div>
+        
+        <div class="stock-card warning">
+            <div class="stock-icon">⚡</div>
+            <div class="stock-info">
+                <div class="stock-label">Estoque Baixo</div>
+                <div class="stock-value">${resumo.produtosBaixos}</div>
+            </div>
+        </div>
+        
+        <div class="stock-card critical">
+            <div class="stock-icon">⚠️</div>
+            <div class="stock-info">
+                <div class="stock-label">Críticos</div>
+                <div class="stock-value">${resumo.produtosCriticos}</div>
+            </div>
+        </div>
+    `;
 }
 
 function formatarValor(valor) {

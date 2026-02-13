@@ -217,6 +217,7 @@ body {
 
 .change-positive { color: #28a745; }
 .change-negative { color: #dc3545; }
+.change-neutral { color: #6c757d; }
 
 /* Seção de Gráficos */
 .charts-section {
@@ -329,7 +330,7 @@ body {
 .category-row.header {
     background-color: #f8f9fa;
     font-weight: 700;
-    color: #f5f5f5;
+    color: #212529;
     font-size: 11px;
     text-transform: uppercase;
 }
@@ -338,50 +339,77 @@ body {
 .category-value { text-align: right; font-weight: 600; color: #28a745; }
 .category-percent { text-align: right; color: #6c757d; }
 
-/* Métricas de Desempenho */
-.performance-metrics {
+/* ===================================
+   RESUMO DO ESTOQUE (NOVO)
+=================================== */
+.stock-summary {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
     margin-top: 15px;
 }
 
-.metric-item {
+.stock-card {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.metric-header {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
+    padding: 12px 15px;
+    border-radius: 6px;
+    border-left: 4px solid;
+    transition: transform 0.2s;
 }
 
-.metric-label {
-    font-size: 13px;
-    color: #6c757d;
+.stock-card:hover {
+    transform: translateX(3px);
+}
+
+.stock-card.total {
+    background-color: #e8f4f8;
+    border-left-color: #17a2b8;
+}
+
+.stock-card.active {
+    background-color: #e7f3ff;
+    border-left-color: #2a5298;
+}
+
+.stock-card.ok {
+    background-color: #d4edda;
+    border-left-color: #28a745;
+}
+
+.stock-card.warning {
+    background-color: #fff3cd;
+    border-left-color: #ffc107;
+}
+
+.stock-card.critical {
+    background-color: #f8d7da;
+    border-left-color: #dc3545;
+}
+
+.stock-icon {
+    font-size: 24px;
+    margin-right: 12px;
+    min-width: 30px;
+    text-align: center;
+}
+
+.stock-info {
+    flex: 1;
+}
+
+.stock-label {
+    font-size: 11px;
     font-weight: 600;
+    text-transform: uppercase;
+    color: #6c757d;
+    margin-bottom: 2px;
 }
 
-.metric-value {
-    font-size: 13px;
+.stock-value {
+    font-size: 18px;
     font-weight: 700;
     color: #212529;
-}
-
-.progress-bar {
-    height: 6px;
-    background-color: #e9ecef;
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
-    border-radius: 4px;
-    transition: width 0.3s;
 }
 
 /* Scrollbar Personalizada */

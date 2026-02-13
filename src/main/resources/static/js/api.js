@@ -193,3 +193,20 @@ async function apiGetVendasCategoria(periodo) {
   }
   return response.json();
 }
+
+// NOVOS ENDPOINTS
+async function apiGetIndicadoresFinanceiros(periodo) {
+  const response = await fetch(`${API_BASE_URL}/api/relatorios/indicadores-financeiros?periodo=${periodo}`);
+  if(!response.ok) {
+    throw new Error("Erro ao buscar indicadores financeiros");
+  }
+  return response.json();
+}
+
+async function apiGetResumoEstoque() {
+  const response = await fetch(`${API_BASE_URL}/api/relatorios/resumo-estoque`);
+  if(!response.ok) {
+    throw new Error("Erro ao buscar resumo do estoque");
+  }
+  return response.json();
+}
