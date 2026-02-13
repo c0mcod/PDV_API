@@ -1,7 +1,9 @@
 package com.pdv.lalapan.services;
 
 import com.pdv.lalapan.dto.relatorio.*;
+import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.enums.Categoria;
+import com.pdv.lalapan.repositories.ProdutoRepository;
 import com.pdv.lalapan.repositories.VendaItensRepository;
 import com.pdv.lalapan.repositories.VendaRepository;
 import org.springframework.data.domain.PageRequest;
@@ -23,10 +25,12 @@ public class RelatorioService {
 
     private final VendaRepository vendaRepo;
     private final VendaItensRepository itensRepo;
+    private final ProdutoRepository prodRepo;
 
-    public RelatorioService(VendaRepository vendaRepo, VendaItensRepository itensRepo) {
+    public RelatorioService(VendaRepository vendaRepo, VendaItensRepository itensRepo, ProdutoRepository prodRepo) {
         this.vendaRepo = vendaRepo;
         this.itensRepo = itensRepo;
+        this.prodRepo = prodRepo;
     }
 
     public List<KpiDTO> getKpis(String periodo, LocalDate dataInicio, LocalDate dataFim) {
@@ -164,17 +168,19 @@ public class RelatorioService {
         return categorias;
     }
 
-    // 5. Métricas de desempenho
-    public List<MetricaDesempenhoDTO> getMetricasDesempenho(String periodo, LocalDate dataInicio, LocalDate dataFim) {
-        List<MetricaDesempenhoDTO> metricas = new ArrayList<>();
+    public EstoqueResumoDTO gerarResumo() {
+        List<Produto> produtosAtivos = prodRepo.findByAtivoTrue();
 
-        metricas.add(new MetricaDesempenhoDTO("Taxa de Conversão", BigDecimal.valueOf(68.5)));
-        metricas.add(new MetricaDesempenhoDTO("Satisfação do Cliente", BigDecimal.valueOf(92.3)));
-        metricas.add(new MetricaDesempenhoDTO("Margem de Lucro", BigDecimal.valueOf(34.7)));
-        metricas.add(new MetricaDesempenhoDTO("Giro de Estoque", BigDecimal.valueOf(78.9)));
-        metricas.add(new MetricaDesempenhoDTO("Retorno de Produtos", BigDecimal.valueOf(2.4)));
+        BigDecimal valorTotal = produtosAtivos.stream()
+                .map(p -> p.getPreco().multiply(p.getQuantidadeEstoque()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return metricas;
+        Integer criticos = prodRepo.countByQuantidadeEstoqueLessThanEqualEstoqueMinimo();
+        Integer baixos = prodRepo.countByQuantidadeEstoqueBetweenMinimoEIdeal();
+        Integer totalAtivos = produtosAtivos.size();
+        Integer ok = totalAtivos - criticos - baixos;
+
+        return new EstoqueResumoDTO(valorTotal, criticos, baixos, totalAtivos, ok);
     }
 
     // Métodos auxiliares

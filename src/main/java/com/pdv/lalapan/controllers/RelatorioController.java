@@ -59,13 +59,8 @@ public class RelatorioController {
         return ResponseEntity.ok(vendas);
     }
 
-    @GetMapping("/metricas-desempenho")
-    public ResponseEntity<List<MetricaDesempenhoDTO>> getMetricasDesempenho(
-            @RequestParam(required = false) String periodo,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataInicio,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataFim
-    ) {
-        List<MetricaDesempenhoDTO> metricas = relatorioService.getMetricasDesempenho(periodo, dataInicio, dataFim);
-        return ResponseEntity.ok(metricas);
+    @GetMapping("/resumo-estoque")
+    public ResponseEntity<EstoqueResumoDTO> getResumoEstoque() {
+        return ResponseEntity.ok(relatorioService.gerarResumo());
     }
 }

@@ -12,4 +12,12 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     List<Produto> findProdutosComEstoqueBaixo();
 
     List<Produto> findByAtivoTrue();
+
+    // Críticos: quantidade <= mínimo
+    @Query("SELECT COUNT(p) FROM Produto p WHERE p.quantidadeEstoque <= p.estoqueMinimo")
+    Integer countByQuantidadeEstoqueLessThanEqualEstoqueMinimo();
+
+    @Query("SELECT COUNT(p) FROM Produto p WHERE p.quantidadeEstoque > p.estoqueMinimo AND p.quantidadeEstoque <= (p.estoqueMinimo * 2)")
+    Integer countByQuantidadeEstoqueBetweenMinimoEIdeal();
+
 }
