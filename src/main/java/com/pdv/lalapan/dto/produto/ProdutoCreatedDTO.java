@@ -10,6 +10,7 @@ public record ProdutoCreatedDTO(
         String codigo,
         BigDecimal estoqueMinimo,
         BigDecimal preco,
+        BigDecimal precoCusto,
         Unidade unidade,
         Categoria categoria,
         BigDecimal quantidadeEstoque

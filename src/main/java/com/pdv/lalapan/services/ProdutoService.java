@@ -26,6 +26,7 @@ public class ProdutoService {
         produto.setEstoqueMinimo(dto.estoqueMinimo());
         produto.setUnidade(dto.unidade());
         produto.setPreco(dto.preco());
+        produto.setPrecoCusto(dto.precoCusto());
         produto.setQuantidadeEstoque(dto.quantidadeEstoque());
 
         Produto salvo = prodRepo.save(produto);
@@ -42,6 +43,7 @@ public class ProdutoService {
         produto.setCategoria(dto.categoria());
         produto.setUnidade(dto.unidade());
         produto.setPreco(dto.preco());
+        produto.setPrecoCusto(dto.precoCusto());
         produto.setQuantidadeEstoque(dto.quantidadeEstoque());
 
         Produto produtoAtualizado = prodRepo.save(produto);

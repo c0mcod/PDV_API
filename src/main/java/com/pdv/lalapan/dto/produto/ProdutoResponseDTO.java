@@ -11,11 +11,21 @@ public record ProdutoResponseDTO(
         String codigo,
         BigDecimal quantidadeEstoque,
         BigDecimal estoqueMinimo,
-        String nome, BigDecimal preco,
+        BigDecimal precoCusto,
+        String nome,
+        BigDecimal preco,
         Unidade unidade,
         Categoria categoria) {
 
     public ProdutoResponseDTO(Produto entity) {
-        this(entity.getId(), entity.getCodigo(), entity.getQuantidadeEstoque(), entity.getEstoqueMinimo(), entity.getNome(), entity.getPreco(), entity.getUnidade(), entity.getCategoria());
+        this(entity.getId(),
+                entity.getCodigo(),
+                entity.getQuantidadeEstoque(),
+                entity.getEstoqueMinimo(),
+                entity.getPrecoCusto(),
+                entity.getNome(),
+                entity.getPreco(),
+                entity.getUnidade(),
+                entity.getCategoria());
     }
 }

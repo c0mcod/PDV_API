@@ -10,6 +10,7 @@ public record ProdutoAtualizadoDTO(
         String nome,
         BigDecimal preco,
         String codigo,
+        BigDecimal precoCusto,
         BigDecimal quantidadeEstoque,
         Unidade unidade,
         Categoria categoria
@@ -20,6 +21,7 @@ public record ProdutoAtualizadoDTO(
                 produto.getNome(),
                 produto.getPreco(),
                 produto.getCodigo(),
+                produto.getPrecoCusto(),
                 produto.getQuantidadeEstoque(),
                 produto.getUnidade(),
                 produto.getCategoria()
