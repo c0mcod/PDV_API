@@ -417,6 +417,14 @@ body {
     text-align: center;
 }
 
+.stock-icon svg {
+    width: 24px;
+    height: 24px;
+    opacity: 0.5;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
 .stock-info {
     flex: 1;
 }

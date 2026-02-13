@@ -77,7 +77,7 @@ function atualizarKPIs(kpis, indicadores) {
         const iconEl = cards[1].querySelector('.kpi-icon');
         
         labelEl.textContent = 'Lucro Bruto';
-        iconEl.textContent = '💰';
+        iconEl.innerHTML = '<svg><use href="../assets/icons.svg#icon-bag-money"></use></svg>';
         valueEl.textContent = formatarValor(indicadores.lucroBruto);
         
         const margemLucro = indicadores.faturamentoTotal > 0 
@@ -95,7 +95,7 @@ function atualizarKPIs(kpis, indicadores) {
         const iconEl = cards[2].querySelector('.kpi-icon');
         
         labelEl.textContent = 'Ticket Médio';
-        iconEl.textContent = '🎫';
+        iconEl.innerHTML = '<svg><use href="../assets/icons.svg#icon-ticket"></use></svg>';
         valueEl.textContent = formatarValor(indicadores.ticketMedio);
         changeEl.textContent = `Por venda realizada`;
         changeEl.className = 'kpi-change change-neutral';
@@ -232,7 +232,7 @@ function atualizarResumoEstoque(resumo) {
     
     container.innerHTML = `
         <div class="stock-card total">
-            <div class="stock-icon">💰</div>
+            <div class="stock-icon"><svg><use href="../assets/icons.svg#icon-bag-money"></use></svg></div>
             <div class="stock-info">
                 <div class="stock-label">Valor Total em Estoque</div>
                 <div class="stock-value">${formatarValor(resumo.valorTotalEstoque)}</div>
@@ -240,7 +240,7 @@ function atualizarResumoEstoque(resumo) {
         </div>
         
         <div class="stock-card active">
-            <div class="stock-icon">📦</div>
+            <div class="stock-icon"><svg><use href="../assets/icons.svg#icon-product-sell"></use></svg></div>
             <div class="stock-info">
                 <div class="stock-label">Produtos Ativos</div>
                 <div class="stock-value">${resumo.totalProdutosAtivos}</div>
@@ -248,7 +248,7 @@ function atualizarResumoEstoque(resumo) {
         </div>
         
         <div class="stock-card ok">
-            <div class="stock-icon">✅</div>
+            <div class="stock-icon"><svg><use href="../assets/icons.svg#icon-ok"></use></svg></div>
             <div class="stock-info">
                 <div class="stock-label">Estoque OK</div>
                 <div class="stock-value">${resumo.produtosOk}</div>
@@ -256,7 +256,7 @@ function atualizarResumoEstoque(resumo) {
         </div>
         
         <div class="stock-card warning">
-            <div class="stock-icon">⚡</div>
+            <div class="stock-icon"><svg><use href="../assets/icons.svg#icon-estoque-baixo"></use></svg></div>
             <div class="stock-info">
                 <div class="stock-label">Estoque Baixo</div>
                 <div class="stock-value">${resumo.produtosBaixos}</div>
@@ -264,7 +264,7 @@ function atualizarResumoEstoque(resumo) {
         </div>
         
         <div class="stock-card critical">
-            <div class="stock-icon">⚠️</div>
+            <div class="stock-icon"><svg><use href="../assets/icons.svg#icon-critical"></use></svg></div>
             <div class="stock-info">
                 <div class="stock-label">Críticos</div>
                 <div class="stock-value">${resumo.produtosCriticos}</div>
