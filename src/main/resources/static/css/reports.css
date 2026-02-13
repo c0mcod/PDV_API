@@ -330,7 +330,8 @@ body {
 .category-row.header {
     background-color: #f8f9fa;
     font-weight: 700;
-    color: #212529;
+    color:#ffff;
+    border-radius: 5px;
     font-size: 11px;
     text-transform: uppercase;
 }
