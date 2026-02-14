@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LalaPDV - Relatórios e Estatísticas</title>
   <link rel="stylesheet" href="../css/menu.css">
+  <link rel="stylesheet" href="../css/modalError.css">
   <link rel="stylesheet" href="../css/reports.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -187,6 +188,21 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+
+  <!-- Modal de Erro -->
+  <div id="notificationErrorModal" class="notification-modal-overlay" style="display: none;">
+    <div class="notification-modal-content">
+      <div class="notification-modal-icon notification-error-icon">
+        <svg>
+          <use href="../assets/icons.svg#icon-error"></use>
+        </svg>
+      </div>
+      <h3>Erro</h3>
+      <p id="notificationErrorMessage"></p>
+      <button class="notification-btn-error" onclick="closeNotificationErrorModal()">Fechar</button>
     </div>
   </div>
 

@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     atualizarSubtotal();
 
   } catch (e) {
-    alert("Erro ao inicializar o PDV");
+    showNotificationError("Erro ao carregar PDV. Por favor, tente novamente.");
     console.error(e);
   }
 });
@@ -120,12 +120,12 @@ btnAdicionarItem.addEventListener("click", async () => {
   const quantidade = Number(quantidadeInput.value);
 
   if (!produto) {
-    alert("Selecione um produto");
+    showNotificationError("Selecione um produto para adicionar.");
     return;
   }
 
   if (quantidade <= 0) {
-    alert("Quantidade inválida");
+    showNotificationError("Quantidade inválida");
     return;
   }
 
@@ -146,7 +146,7 @@ btnAdicionarItem.addEventListener("click", async () => {
     quantidadeInput.value = 1;
 
   } catch (e) {
-    alert(e.message);
+    showNotificationError(e.message);
   }
 });
 
@@ -163,7 +163,7 @@ async function removerItem(index) {
     renderizarItens();
     atualizarSubtotal();
   } catch (e) {
-    alert(e.message);
+    showNotificationError(e.message);
   }
 }
 
@@ -218,7 +218,7 @@ function atualizarSubtotal() {
 
 btnFinalizarVenda.addEventListener("click", () => {
   if (itensVenda.length === 0) {
-    alert("Nenhum item na venda");
+    showNotificationError("Adicione pelo menos um item para finalizar a venda.");
     return;
   }
 
@@ -243,7 +243,7 @@ btnCancelarVenda.addEventListener("click", async () => {
     await apiCancelarVenda(vendaIdAtual);
     window.location.href = "/pages/awaiting.html";
   } catch (e) {
-    alert(e.message);
+    showNotificationError("Erro ao cancelar venda. Por favor, tente novamente.");
   }
 });
 
@@ -284,7 +284,7 @@ btnConfirmarFinalizacao.addEventListener("click", async () => {
   console.log(`Verificando: Recebido(${recebido}) < Total(${total})`);
 
   if (recebido < total) {
-    alert("O valor recebido é menor que o total da venda!");
+    showNotificationError("Valor recebido é insuficiente para finalizar a venda.");
     return;
   }
 
@@ -296,10 +296,13 @@ btnConfirmarFinalizacao.addEventListener("click", async () => {
   try {
     btnConfirmarFinalizacao.disabled = true;
     await apiFinalizarVenda(vendaIdAtual, payload);
-    alert("Venda concluída com sucesso!");
-    window.location.href = "/pages/awaiting.html";
+    showNotificationSuccess("Venda finalizada com sucesso!");
+    setTimeout(() => {
+      window.location.href = "/pages/awaiting.html";
+    }, 2000);
   } catch (e) {
-    alert("Erro ao finalizar: " + e.message);
+    showNotificationError("Erro ao finalizar venda. Por favor, tente novamente.");
+    console.error(e);
     btnConfirmarFinalizacao.disabled = false;
   }
 });

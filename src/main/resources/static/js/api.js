@@ -210,3 +210,24 @@ async function apiGetResumoEstoque() {
   }
   return response.json();
 }
+
+
+// Modal de Erro
+function showNotificationError(mensagem) {
+  document.getElementById('notificationErrorMessage').textContent = mensagem;
+  document.getElementById('notificationErrorModal').style.display = 'flex';
+}
+
+function closeNotificationErrorModal() {
+  document.getElementById('notificationErrorModal').style.display = 'none';
+}
+
+// Modal de Sucesso
+function showNotificationSuccess(mensagem) {
+  document.getElementById('notificationSuccessMessage').textContent = mensagem;
+  document.getElementById('notificationSuccessModal').style.display = 'flex';
+}
+
+function closeNotificationSuccessModal() {
+  document.getElementById('notificationSuccessModal').style.display = 'none';
+}

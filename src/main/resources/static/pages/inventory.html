@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LalaPDV - Gerenciamento de Estoque</title>
     <link rel="stylesheet" href="../css/menu.css">
+    <link rel="stylesheet" href="../css/modalError.css">
     <link rel="stylesheet" href="../css/inventory.css">
 </head>
 
@@ -99,8 +100,7 @@
             <!-- Barra de Ferramentas -->
             <div class="toolbar">
                 <div class="search-section">
-                    <input type="text" class="search-box"
-                        placeholder="Buscar produto por nome, código ou categoria...">
+                    <input type="text" class="search-box" placeholder="Buscar produto por nome, código ou categoria...">
                 </div>
 
                 <div class="toolbar-actions">
@@ -360,6 +360,34 @@
                         <button type="button" class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
                         <button type="button" id="btn-confirmar-exclusao" class="btn-excluir">Excluir</button>
                     </div>
+                </div>
+            </div>
+
+            <!-- Modal de Erro -->
+            <div id="notificationErrorModal" class="notification-modal-overlay" style="display: none;">
+                <div class="notification-modal-content">
+                    <div class="notification-modal-icon notification-error-icon">
+                        <svg>
+                            <use href="../assets/icons.svg#icon-error"></use>
+                        </svg>
+                    </div>
+                    <h3>Erro</h3>
+                    <p id="notificationErrorMessage"></p>
+                    <button class="notification-btn-error" onclick="closeNotificationErrorModal()">Fechar</button>
+                </div>
+            </div>
+
+            <!-- Modal de Sucesso -->
+            <div id="notificationSuccessModal" class="notification-modal-overlay" style="display: none;">
+                <div class="notification-modal-content">
+                    <div class="notification-modal-icon notification-success-icon">
+                        <svg>
+                            <use href="../assets/icons.svg#icon-ok"></use>
+                        </svg>
+                    </div>
+                    <h3>Sucesso</h3>
+                    <p id="notificationSuccessMessage"></p>
+                    <button class="notification-btn-success" onclick="closeNotificationSuccessModal()">Ok</button>
                 </div>
             </div>
 

@@ -24,7 +24,7 @@ async function carregarProdutos() {
         atualizarEstatisticas(produtos);
     } catch (error) {
         console.error('Erro ao carregar produtos:', error);
-        alert('Erro ao carregar produtos do servidor');
+        showNotificationError('Erro ao carregar produtos do servidor');
     }
 }
 
@@ -214,13 +214,13 @@ async function salvarProduto() {
 
     try {
         await apiCreateProduct(produto);
-        alert('Produto cadastrado com sucesso!');
+        showNotificationSuccess('Produto cadastrado com sucesso!');
         modal.style.display = 'none';
         form.reset();
         await carregarProdutos();
     } catch (error) {
         console.error('Erro ao salvar produto:', error);
-        alert('Erro ao salvar produto: ' + error.message);
+        showNotificationError('Erro ao salvar produto: ' + error.message);
     }
 }
 
@@ -297,15 +297,15 @@ async function atualizarProduto() {
         });
 
         if (response.ok) {
-            alert('Produto atualizado com sucesso!');
+            showNotificationSuccess('Produto atualizado com sucesso!');
             modal.style.display = 'none';
             await carregarProdutos();
         } else {
-            alert('Erro ao atualizar produto!');
+            showNotificationError('Erro ao atualizar produto!');
         }
     } catch (error) {
         console.error('Erro:', error);
-        alert('Erro ao conectar com o servidor!');
+        showNotificationError('Erro ao conectar com o servidor!');
     }
 }
 
@@ -345,7 +345,7 @@ function abrirModalEntrada(produtoId) {
     const produto = todosOsProdutos.find(p => p.id === produtoId);
 
     if (!produto) {
-        alert('Produto não encontrado!');
+        showNotificationError('Produto não encontrado!');
         return;
     }
 
@@ -368,18 +368,18 @@ async function registrarEntrada() {
 
     // Validação básica
     if (quantidade <= 0) {
-        alert('A quantidade deve ser maior que zero!');
+        showNotificationError('A quantidade deve ser maior que zero!');
         return;
     }
 
     try {
         await apiRegistrarEntrada(produtoId, quantidade);
-        alert('Entrada registrada com sucesso!');
+        showNotificationSuccess('Entrada registrada com sucesso!');
         modal.style.display = 'none';
         await carregarProdutos(); // Recarrega a tabela
     } catch (error) {
         console.error('Erro ao registrar entrada:', error);
-        alert('Erro ao registrar entrada: ' + error.message);
+        showNotificationError('Erro ao registrar entrada: ' + error.message);
     }
 }
 

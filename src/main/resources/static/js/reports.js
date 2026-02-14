@@ -51,7 +51,7 @@ async function carregarRelatorios(periodo) {
         
     } catch (error) {
         console.error('Erro ao carregar relatórios:', error);
-        alert('Erro ao carregar dados: ' + error.message);
+        showNotificationError('Ocorreu um erro ao carregar os relatórios. Por favor, tente novamente mais tarde.');
     }
 }
 
