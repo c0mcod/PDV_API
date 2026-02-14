@@ -29,14 +29,14 @@ public class ProdutoServiceTest {
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    private Produto criarProduto(String nome, double estoque) {
+    private Produto criarProduto(String nome, BigDecimal estoque) {
         Produto p = new Produto();
         p.setNome(nome);
         p.setPreco(new BigDecimal("10.00"));
         p.setCodigo("1200050123");
-        p.setEstoqueMinimo(10.00);
+        p.setEstoqueMinimo(new BigDecimal(10.00));
         p.setQuantidadeEstoque(estoque);
-        p.setUnidade(Unidade.L);
+        p.setUnidade(Unidade.UN);
         p.setCategoria(Categoria.BEBIDAS);
 
         return produtoRepository.save(p);
@@ -45,11 +45,11 @@ public class ProdutoServiceTest {
     // ========== TESTES DE MÉTODOS ==========
     @Test
     void deveRegistrarEntradaEstoque() {
-        Produto p = criarProduto("BATATA", 10.0);
+        Produto p = criarProduto("BATATA", new BigDecimal("10.00"));
 
         produtoService.registrarEntrada(
                 p.getId(),
-                new EntradaProdutoRequestDTO("RECEBIMENTO DE BATATAS", 50.0));
+                new EntradaProdutoRequestDTO(new BigDecimal("10.00")));
 
         Produto produtoAtualizado = produtoRepository.findById(p.getId()).get();
 
@@ -58,16 +58,16 @@ public class ProdutoServiceTest {
 
     @Test
     void deveListarProdutosEstoqueBaixo() {
-        Produto baixo1 = criarProduto("feijão", 40.0);
-        baixo1.setEstoqueMinimo(50);
+        Produto baixo1 = criarProduto("feijão", new BigDecimal("10.00"));
+        baixo1.setEstoqueMinimo(new BigDecimal("50"));
         produtoRepository.save(baixo1);
 
-        Produto baixo2 = criarProduto("arroz", 9);
-        baixo2.setEstoqueMinimo(10);
+        Produto baixo2 = criarProduto("arroz", new BigDecimal("9.00"));
+        baixo2.setEstoqueMinimo(new BigDecimal("10"));
         produtoRepository.save(baixo2);
 
-        Produto ok = criarProduto("batata", 10);
-        ok.setEstoqueMinimo(5);
+        Produto ok = criarProduto("batata", new BigDecimal("10.00"));
+        ok.setEstoqueMinimo(new BigDecimal("5"));
         produtoRepository.save(ok);
 
         List<ProdutoEstoqueBaixoDTO> produtoEstoqueBaixo = produtoService.listarEstoqueBaixo();
@@ -80,18 +80,18 @@ public class ProdutoServiceTest {
     void naoDeveRegistrarProdutoInexistente() {
         assertThrows(
                 ProdutoInexistenteException.class,
-                () -> produtoService.registrarEntrada(999L, new EntradaProdutoRequestDTO("teste", 10.00))
+                () -> produtoService.registrarEntrada(999L, new EntradaProdutoRequestDTO(new BigDecimal("10.00")))
         );
     }
 
     @Test
     void naoDeveRegistrarProdutoQuantidadeInvalida() {
         // ====== ARRANGE ======
-        Produto produto = criarProduto("feijao", 2);
+        Produto produto = criarProduto("feijao", new BigDecimal("2.00"));
 
         // ====== ACT & ASSERT ======
         assertThrows(QuantidadeInvalidaException.class,
-                () -> produtoService.registrarEntrada(produto.getId(), new EntradaProdutoRequestDTO("Teste", -10))
+                () -> produtoService.registrarEntrada(produto.getId(), new EntradaProdutoRequestDTO(new BigDecimal("-10.00")))
                 );
     }
 
