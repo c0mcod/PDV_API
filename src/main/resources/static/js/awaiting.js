@@ -1,15 +1,12 @@
 /* =========================
-   ELEMENTOS DO DOM
-========================= */
-
-const btnIniciarVenda = document.querySelector(".btn-iniciar");
-
-/* =========================
    INICIAR VENDA
 ========================= */
 
-btnIniciarVenda.addEventListener("click", async () => {
-  btnIniciarVenda.disabled = true;
+let vendaIniciando = false;
+
+async function iniciarVenda() {
+  if (vendaIniciando) return;
+  vendaIniciando = true;
 
   try {
     const venda = await apiAbrirVenda();
@@ -22,7 +19,14 @@ btnIniciarVenda.addEventListener("click", async () => {
 
   } catch (e) {
     alert(e.message);
-    btnIniciarVenda.disabled = false;
+    vendaIniciando = false;
+  }
+}
+
+// Iniciar venda ao pressionar Enter
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    iniciarVenda();
   }
 });
 

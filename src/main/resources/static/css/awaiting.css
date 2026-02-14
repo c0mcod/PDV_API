@@ -69,9 +69,8 @@ body {
 
 /* Painel Direito (Conteúdo Central) */
 .right-panel {
-    background-color: white;
+    background-color: #ffffff;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 30px;
@@ -81,122 +80,95 @@ body {
 /* Card Central */
 .venda-card {
     text-align: center;
-    max-width: 480px;
-    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center; 
-    gap: 15px;
-}
-
-/* Status do Caixa */
-.caixa-status {
-    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background-color: #d4edda;
-    color: #155724;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    border: 1px solid #c3e6cb;
-    margin-bottom: 20px;
+    gap: 50px;
 }
 
-.status-dot {
-    width: 8px;
-    height: 8px;
-    background-color: #28a745;
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.2); }
-}
-
-/* Ícone Animado */
-.card-icon {
-    font-size: 120px;
-    color: #2a5298;
-    opacity: 0.6;
-    margin-bottom: 10px;
-    display: block;
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
-}
-
-/* Textos do Card */
-.card-title {
-    font-size: 36px;
-    font-weight: 700;
-    color: #2a5298;
-    margin-top: 10px;
-    line-height: 1.2;
-}
-
-.card-subtitle {
-    font-size: 16px;
-    color: #6c757d;
-    max-width: 80%;
-    line-height: 1.5;
-    margin-bottom: 40px;
-}
-
-/* Botão Principal */
-.btn-iniciar {
-    width: 100%;
-    padding: 22px;
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-    border: none;
-    border-radius: 12px;
-    color: white;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 10px 25px rgba(40, 167, 69, 0.25);
-    transition: all 0.3s;
+/* Indicador de Status com Pulse */
+.status-indicator {
+    position: relative;
+    width: 80px;
+    height: 80px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
 }
 
-.btn-iniciar:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 30px rgba(40, 167, 69, 0.35);
+.pulse-dot {
+    width: 20px;
+    height: 20px;
+    background-color: #4caf50;
+    border-radius: 50%;
+    position: relative;
+    z-index: 2;
 }
 
-.btn-iniciar:active { transform: translateY(-1px); }
+.pulse-ring {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 3px solid #4caf50;
+    border-radius: 50%;
+    animation: pulse-ring 2s ease-out infinite;
+    z-index: 1;
+}
 
-/* Footer do Card */
-.footer-text {
-    margin-top: 25px;
-    font-size: 12px;
-    color: #adb5bd;
+@keyframes pulse-ring {
+    0% {
+        transform: scale(0.5);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+/* Título */
+.venda-card h1 {
+    font-size: 40px;
+    font-weight: 400;
+    color: #212529;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+/* Linha de Ação */
+.action-line {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 18px;
+    color: #868e96;
+}
+
+kbd {
+    background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #dee2e6;
+    border-bottom: 4px solid #adb5bd;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: #212529;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: inline-block;
+    min-width: 100px;
 }
 
 /* --- Media Queries Desktop --- */
 @media (max-width: 1366px) {
     .main-container { grid-template-columns: 240px 1fr; }
-    
-    .card-icon { font-size: 90px; }
-    .card-title { font-size: 30px; }
-    .card-subtitle { margin-bottom: 30px; }
-    .btn-iniciar { padding: 18px; font-size: 16px; }
+    .venda-card h1 { font-size: 36px; }
+    .action-line { font-size: 16px; }
+    kbd { font-size: 18px; padding: 10px 20px; }
 }
 
 @media (max-width: 1100px) {
     .main-container { grid-template-columns: 0px 1fr; }
-    
-    .right-panel { padding: 20px; }
-    .venda-card { max-width: 450px; }
+    .venda-card h1 { font-size: 32px; }
+    .venda-card { gap: 40px; }
 }
