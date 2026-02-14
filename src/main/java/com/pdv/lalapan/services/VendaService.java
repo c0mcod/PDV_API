@@ -50,15 +50,12 @@ public class VendaService {
 
     @Transactional
     public VendaAddItemResponseDTO adicionarItem(Long vendaId, VendaAddItemRequestDTO dto) {
-        // Verifica se venda existe
         Venda venda = vendaRepo.findById(vendaId)
                 .orElseThrow(() -> new VendaNaoEncontradaException(vendaId));
 
-        // Verifica se produto existe
         Produto produto = prodRepo.findById(dto.idProduto())
                 .orElseThrow(() -> new ProdutoInexistenteException(dto.idProduto()));
 
-        // Checagem de status de venda
         if (venda.getStatus() != StatusVenda.ABERTA) {
             throw new VendaNaoAbertaException(venda.getStatus(), vendaId);
         }

@@ -85,7 +85,7 @@ public class RelatorioService {
         return kpis;
     }
 
-    // 2. Vendas por dia da semana
+    // Vendas por dia da semana
     public List<VendasDiaSemanaDTO> getVendasPorDiaSemana(String periodo, LocalDate dataInicio, LocalDate dataFim) {
         LocalDateTime[] datas = processarPeriodo(periodo, dataInicio, dataFim);
         LocalDateTime dataHoraInicio = datas[0];
@@ -111,7 +111,7 @@ public class RelatorioService {
         return lista;
     }
 
-    // 3. Top 5 produtos mais vendidos
+    // Top 5 produtos mais vendidos
     public List<TopProdutoDTO> getTopProdutos(String periodo, LocalDate dataInicio, LocalDate dataFim, int limite) {
         LocalDateTime[] datas = processarPeriodo(periodo, dataInicio, dataFim);
         LocalDateTime dataHoraInicio = datas[0];
@@ -134,7 +134,7 @@ public class RelatorioService {
         return topProdutos;
     }
 
-    // 4. Vendas por categoria
+    // Vendas por categoria
     public List<CategoriaSalesDTO> getVendasPorCategoria(String periodo, LocalDate dataInicio, LocalDate dataFim) {
         LocalDateTime[] datas = processarPeriodo(periodo, dataInicio, dataFim);
         LocalDateTime dataHoraInicio = datas[0];
@@ -149,13 +149,8 @@ public class RelatorioService {
         List<CategoriaSalesDTO> categorias = new ArrayList<>();
 
         for (Object[] row : resultado) {
-            System.out.println("Tipo do row[0]: " + row[0].getClass().getName());
-            System.out.println("Valor do row[0]: " + row[0]);
-
             Categoria categoriaEnum = (Categoria) row[0];
             String nomeCategoria = categoriaEnum.getDescricao();
-
-            System.out.println("Nome da categoria: " + nomeCategoria);
 
             BigDecimal valorVendas = (BigDecimal) row[1];
             BigDecimal percentual = totalGeral.compareTo(BigDecimal.ZERO) > 0

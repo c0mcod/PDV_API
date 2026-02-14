@@ -14,31 +14,31 @@ import java.util.Optional;
 public interface VendaRepository extends JpaRepository<Venda, Long> {
     Optional<Venda> findByStatus(StatusVenda status);
 
-    // 1. Buscar vendas por período (usar dataHoraFechamento)
+    // Buscar vendas por período
     List<Venda> findByDataHoraFechamentoBetween(LocalDateTime dataInicio, LocalDateTime dataFim);
 
-    // 2. Calcular faturamento total por período
+    // Calcular faturamento total por período
     @Query("SELECT SUM(v.valorTotal) FROM Venda v WHERE v.dataHoraFechamento BETWEEN :dataInicio AND :dataFim")
     BigDecimal calcularFaturamentoPorPeriodo(
             @Param("dataInicio") LocalDateTime dataInicio,
             @Param("dataFim") LocalDateTime dataFim
     );
 
-    // 3. Contar número de vendas por período
+    // Contar número de vendas por período
     @Query("SELECT COUNT(v) FROM Venda v WHERE v.dataHoraFechamento BETWEEN :dataInicio AND :dataFim")
     Long contarVendasPorPeriodo(
             @Param("dataInicio") LocalDateTime dataInicio,
             @Param("dataFim") LocalDateTime dataFim
     );
 
-    // 4. Calcular ticket médio
+    // Calcular ticket médio
     @Query("SELECT AVG(v.valorTotal) FROM Venda v WHERE v.dataHoraFechamento BETWEEN :dataInicio AND :dataFim")
     BigDecimal calcularTicketMedio(
             @Param("dataInicio") LocalDateTime dataInicio,
             @Param("dataFim") LocalDateTime dataFim
     );
 
-    // 5. Vendas por dia da semana
+    // Vendas por dia da semana
     @Query("SELECT FUNCTION('DAYOFWEEK', v.dataHoraFechamento) as dia, SUM(v.valorTotal) as total " +
             "FROM Venda v WHERE v.dataHoraFechamento BETWEEN :dataInicio AND :dataFim " +
             "GROUP BY FUNCTION('DAYOFWEEK', v.dataHoraFechamento) " +
@@ -48,7 +48,7 @@ public interface VendaRepository extends JpaRepository<Venda, Long> {
             @Param("dataFim") LocalDateTime dataFim
     );
 
-    // 6. Contar produtos vendidos
+    // Contar produtos vendidos
     @Query("SELECT SUM(iv.quantidade) FROM VendaItens iv " +
             "JOIN iv.venda v WHERE v.dataHoraFechamento BETWEEN :dataInicio AND :dataFim")
     Long contarProdutosVendidos(
