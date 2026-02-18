@@ -1,6 +1,5 @@
 package com.pdv.lalapan.entities;
 
-import com.pdv.lalapan.enums.MetodoPagamento;
 import com.pdv.lalapan.enums.StatusVenda;
 import com.pdv.lalapan.exceptions.*;
 import jakarta.persistence.*;
@@ -23,8 +22,8 @@ public class Venda {
 
     private BigDecimal valorTotal = BigDecimal.ZERO;
 
-    @Enumerated(EnumType.STRING)
-    private MetodoPagamento metodoPagamento;
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
+    private List<Pagamento> pagamentos = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private StatusVenda status;
@@ -72,12 +71,12 @@ public class Venda {
         this.valorTotal = valorTotal;
     }
 
-    public MetodoPagamento getMetodoPagamento() {
-        return metodoPagamento;
+    public List<Pagamento> getPagamentos() {
+        return pagamentos;
     }
 
-    public void setMetodoPagamento(MetodoPagamento metodoPagamento) {
-        this.metodoPagamento = metodoPagamento;
+    public void setPagamentos(List<Pagamento> pagamentos) {
+        this.pagamentos = pagamentos;
     }
 
     public StatusVenda getStatus() {
@@ -117,7 +116,7 @@ public class Venda {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public void fechar(MetodoPagamento metodo) {
+    public void fechar() {
         if(this.status != StatusVenda.ABERTA) {
             throw new VendaNaoAbertaException(this.getStatus(), this.getId());
         }
@@ -130,11 +129,6 @@ public class Venda {
             throw new ValorTotalInvalidoException(this.getValorTotal());
         }
 
-        if(metodo == null) {
-            throw new MetodoDePagamentoInvalidoException(metodo);
-        }
-
-        this.setMetodoPagamento(metodo);
         this.setStatus(StatusVenda.FINALIZADA);
         this.setDataHoraFechamento(LocalDateTime.now());
     }

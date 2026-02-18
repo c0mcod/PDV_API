@@ -3,6 +3,7 @@ package com.pdv.lalapan.services;
 import com.pdv.lalapan.dto.cancelamento.CancelarItemDTO;
 import com.pdv.lalapan.dto.cancelamento.CancelarVendaDTO;
 import com.pdv.lalapan.dto.venda.*;
+import com.pdv.lalapan.entities.Pagamento;
 import com.pdv.lalapan.entities.Produto;
 import com.pdv.lalapan.entities.Venda;
 import com.pdv.lalapan.entities.VendaItens;
@@ -104,13 +105,27 @@ public class VendaService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .setScale(2, RoundingMode.HALF_UP);
 
-        if (dto.valorRecebido().setScale(2, RoundingMode.HALF_UP).compareTo(totalVenda) < 0) {
-            throw new ValorInsuficienteException(dto.valorRecebido(), totalVenda);
+        BigDecimal totalPago = dto.pagamentos().stream()
+                .map(PagamentoRequestDTO::valor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
+
+        if (totalPago.compareTo(totalVenda) < 0) {
+            throw new ValorInsuficienteException(totalPago, totalVenda);
         }
 
-        BigDecimal troco = dto.valorRecebido().subtract(totalVenda);
+        BigDecimal troco = totalPago.subtract(totalVenda);
 
-        venda.fechar(dto.metodo());
+        // salva cada pagamento
+        for (PagamentoRequestDTO pagamentoDTO : dto.pagamentos()) {
+            Pagamento pagamento = new Pagamento();
+            pagamento.setVenda(venda);
+            pagamento.setMetodo(pagamentoDTO.metodo());
+            pagamento.setValor(pagamentoDTO.valor());
+            venda.getPagamentos().add(pagamento);
+        }
+
+        venda.fechar();
 
         for (VendaItens item : venda.getItens()) {
             Produto produto = item.getProduto();
@@ -125,10 +140,7 @@ public class VendaService {
         }
 
         Venda vendaFinalizada = vendaRepo.save(venda);
-        return new VendaFinalizadaResponseDTO(
-                vendaFinalizada.getId(),
-                troco
-        );
+        return new VendaFinalizadaResponseDTO(vendaFinalizada.getId(), troco);
     }
 
 

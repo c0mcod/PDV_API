@@ -1,8 +1,8 @@
 package com.pdv.lalapan.dto.venda;
 
-import com.pdv.lalapan.enums.MetodoPagamento;
+import com.pdv.lalapan.entities.Pagamento;
 
-import java.math.BigDecimal;
+import java.util.List;
 
-public record VendaFinalizadaRequestDTO(MetodoPagamento metodo, BigDecimal valorRecebido) {
+public record VendaFinalizadaRequestDTO(List<PagamentoRequestDTO> pagamentos) {
 }
