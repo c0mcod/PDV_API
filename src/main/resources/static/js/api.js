@@ -99,7 +99,6 @@ async function apiGetVenda(vendaId) {
   return response.json();
 }
 
-
 async function apiAdicionarItemVenda(vendaId, payload) {
   const response = await fetch(`${API_BASE_URL}/venda/${vendaId}/itens`, {
     method: "POST",
@@ -194,7 +193,6 @@ async function apiGetVendasCategoria(periodo) {
   return response.json();
 }
 
-// NOVOS ENDPOINTS
 async function apiGetIndicadoresFinanceiros(periodo) {
   const response = await fetch(`${API_BASE_URL}/api/relatorios/indicadores-financeiros?periodo=${periodo}`);
   if(!response.ok) {
