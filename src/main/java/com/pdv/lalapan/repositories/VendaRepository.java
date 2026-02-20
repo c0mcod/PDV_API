@@ -3,6 +3,8 @@ package com.pdv.lalapan.repositories;
 import com.pdv.lalapan.entities.Usuario;
 import com.pdv.lalapan.entities.Venda;
 import com.pdv.lalapan.enums.StatusVenda;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -69,4 +71,19 @@ public interface VendaRepository extends JpaRepository<Venda, Long> {
     @Query("SELECT COUNT(v) FROM Venda v WHERE v.dataHoraFechamento BETWEEN :inicio AND :fim")
     Integer contarVendas(@Param("inicio") LocalDateTime inicio,
                          @Param("fim") LocalDateTime fim);
+
+    @Query("""
+    SELECT v FROM Venda v
+    WHERE v.status = 'FINALIZADA'
+    AND (:dataInicio IS NULL OR v.dataHoraAbertura >= :dataInicio)
+    AND (:dataFim IS NULL OR v.dataHoraAbertura <= :dataFim)
+    AND (:operadorId IS NULL OR v.operador.id = :operadorId)
+    ORDER BY v.dataHoraAbertura DESC
+""")
+    Page<Venda> buscarHistorico(
+            @Param("dataInicio") LocalDateTime dataInicio,
+            @Param("dataFim") LocalDateTime dataFim,
+            @Param("operadorId") Long operadorId,
+            Pageable pageable
+    );
 }
