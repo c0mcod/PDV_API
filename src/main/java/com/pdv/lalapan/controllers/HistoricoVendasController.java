@@ -43,13 +43,21 @@ public class HistoricoVendasController {
     }
 
     @GetMapping("/exportar/excel")
-    public ResponseEntity<byte[]> exportarExcel(@RequestParam(required = false) Long operadorId) throws IOException {
+    public ResponseEntity<byte[]> exportarExcel(
+            @RequestParam(required = false) Long operadorId,
+            @RequestParam(required = false) String dataInicio,
+            @RequestParam(required = false) String dataFim) throws IOException {
 
-        LocalDateTime dataFim = LocalDateTime.now();
-        LocalDateTime dataInicio = dataFim.minusDays(90);
+        LocalDateTime inicio = dataInicio != null
+                ? LocalDateTime.parse(dataInicio)
+                : LocalDateTime.now().minusDays(90);
 
-        List<HistoricoVendasResponseDTO> historico = historicoService.buscarHistoricoExport(dataInicio, dataFim, operadorId);
-        byte[] excelBytes = excelService.exportarHistoricoVendas(historico);
+        LocalDateTime fim = dataFim != null
+                ? LocalDateTime.parse(dataFim)
+                : LocalDateTime.now();
+
+        List<HistoricoVendasResponseDTO> historico = historicoService.buscarHistoricoExport(inicio, fim, operadorId);
+        byte[] excelBytes = excelService.exportarHistoricoVendas(historico, inicio, fim, operadorId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=historico.xlsx");
