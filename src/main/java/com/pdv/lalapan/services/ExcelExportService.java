@@ -82,7 +82,7 @@ public class ExcelExportService {
         return outputStream.toByteArray();
     }
 
-    public byte[] exportarHistoricoVendas(List<HistoricoVendasResponseDTO> vendas, LocalDateTime dataInicio, LocalDateTime dataFim, Long operadorId) throws IOException {
+    public byte[] exportarHistoricoVendas(List<HistoricoVendasResponseDTO> vendas, LocalDateTime dataInicio, LocalDateTime dataFim, Long operadorId, LocalDateTime criandoEm) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Historico de vendas");
 
@@ -129,7 +129,13 @@ public class ExcelExportService {
         operadorCell.setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 5));
 
-        sheet.createRow(3); // linha em branco
+        Row criadoEmRow = sheet.createRow(3);
+        Cell criadoEmCell = operadorRow.createCell(0);
+        operadorCell.setCellValue("Criado em: " + criandoEm.format(formatter));
+        operadorCell.setCellStyle(headerStyle);
+        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 5));
+
+        sheet.createRow(4); // linha em branco
 
         // Cabeçalho da tabela
         Row headerRow = sheet.createRow(4);

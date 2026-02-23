@@ -4,6 +4,7 @@ import com.pdv.lalapan.dto.historicoVendas.HistoricoVendasResponseDTO;
 import com.pdv.lalapan.dto.historicoVendas.VendaDetalheDTO;
 import com.pdv.lalapan.services.ExcelExportService;
 import com.pdv.lalapan.services.HistoricoVendasService;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -46,7 +47,7 @@ public class HistoricoVendasController {
     public ResponseEntity<byte[]> exportarExcel(
             @RequestParam(required = false) Long operadorId,
             @RequestParam(required = false) String dataInicio,
-            @RequestParam(required = false) String dataFim) throws IOException {
+            @RequestParam(required = false) String dataFim ) throws IOException {
 
         LocalDateTime inicio = dataInicio != null
                 ? LocalDateTime.parse(dataInicio)
@@ -57,7 +58,8 @@ public class HistoricoVendasController {
                 : LocalDateTime.now();
 
         List<HistoricoVendasResponseDTO> historico = historicoService.buscarHistoricoExport(inicio, fim, operadorId);
-        byte[] excelBytes = excelService.exportarHistoricoVendas(historico, inicio, fim, operadorId);
+        LocalDateTime criadoEm = LocalDateTime.now();
+        byte[] excelBytes = excelService.exportarHistoricoVendas(historico, inicio, fim, operadorId, criadoEm);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=historico.xlsx");
