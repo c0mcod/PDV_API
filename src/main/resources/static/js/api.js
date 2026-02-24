@@ -4,10 +4,18 @@ const API_BASE_URL = "http://localhost:8090";
    PRODUTOS
 ======================= */
 
-async function apiGetProducts() {
-  const response = await fetch(`${API_BASE_URL}/produto/lista`);
+async function apiGetProducts(page = 0, size = 10) {
+  const response = await fetch(`${API_BASE_URL}/produto/lista?page=${page}&size=${size}`);
   if (!response.ok) {
     throw new Error("Erro ao buscar produtos");
+  }
+  return response.json();
+}
+
+async function apiGetAllProducts() {
+  const response = await fetch(`${API_BASE_URL}/produto/lista-todos`);
+  if (!response.ok) {
+    throw new Error("Erro ao buscar todos os produtos");
   }
   return response.json();
 }

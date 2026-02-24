@@ -474,6 +474,66 @@ body {
     background-color: #138496;
 }
 
+/* --- Paginação --- */
+.paginacao-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 30px;
+    background: white;
+    border-top: 1px solid #e9ecef;
+    flex-shrink: 0;
+}
+
+.paginacao-info {
+    font-size: 13px;
+    color: #868e96;
+}
+
+.paginacao-botoes {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-pagina {
+    min-width: 34px;
+    height: 34px;
+    padding: 0 8px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    background: white;
+    color: #495057;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 600;
+}
+
+.btn-pagina:hover:not(:disabled) {
+    background-color: #e7f0ff;
+    border-color: #2a5298;
+    color: #2a5298;
+}
+
+.btn-pagina:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.btn-pagina.ativa {
+    background-color: #2a5298;
+    border-color: #2a5298;
+    color: white;
+}
+
+svg {
+    width: 24px;
+    height: 24px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
 /* Container da Tabela */
 .table-container {
     flex: 1;
