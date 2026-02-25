@@ -5,6 +5,7 @@ import com.pdv.lalapan.exceptions.*;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -125,7 +126,8 @@ public class Venda {
     private void recalcularValorTotal() {
         this.valorTotal = itens.stream()
                 .map(VendaItens::getSubtotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
     public void fechar() {

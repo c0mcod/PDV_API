@@ -3,6 +3,7 @@ package com.pdv.lalapan.entities;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Entity
 public class VendaItens {
@@ -76,6 +77,7 @@ public class VendaItens {
     }
 
     public void calcularSubTotal() {
-        this.subtotal = precoUnitario.multiply(quantidade);
+        this.subtotal = precoUnitario.multiply(quantidade)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 }

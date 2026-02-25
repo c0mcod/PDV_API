@@ -104,15 +104,15 @@ public class VendaService {
         Venda venda = vendaRepo.findById(vendaId)
                 .orElseThrow(() -> new VendaNaoEncontradaException(vendaId));
 
-        BigDecimal totalVenda = venda.getItens().stream()
-                .map(item -> item.getPrecoUnitario().multiply(item.getQuantidade()))
-                .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalVenda = venda.getValorTotal();
 
         BigDecimal totalPago = dto.pagamentos().stream()
                 .map(PagamentoRequestDTO::valor)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .setScale(2, RoundingMode.HALF_UP);
+
+        System.out.println("Total calculado pelo backend: " + totalVenda);
+        System.out.println("Total pago pelo frontend: " + totalPago);
 
         if (totalPago.compareTo(totalVenda) < 0) {
             throw new ValorInsuficienteException(totalPago, totalVenda);
