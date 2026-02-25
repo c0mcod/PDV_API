@@ -16,6 +16,7 @@ if (!vendaIdAtual) {
 let produtos = [];
 let produtosMap = {};
 let itensVenda = [];
+let totalVenda = 0;
 
 /* =========================
    ELEMENTOS DO DOM
@@ -50,6 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     produtosMap = Object.fromEntries(produtos.map(p => [p.id, p]));
 
     const venda = await apiGetVenda(vendaIdAtual);
+    totalVenda = venda.valorTotal;
 
     itensVenda = venda.itens.map(item => ({
       itemId: item.itemId,
@@ -157,6 +159,9 @@ btnAdicionarItem.addEventListener("click", async () => {
       quantidade: quantidadeArredondada
     });
 
+    const vendaAtualizada = await apiGetVenda(vendaIdAtual);
+    totalVenda = vendaAtualizada.valorTotal;
+
     itensVenda.push({
       itemId: response.itemId,
       productId: produto.id,
@@ -190,6 +195,10 @@ async function removerItem(index) {
   try {
     await apiRemoverItemVenda(vendaIdAtual, item.itemId);
     itensVenda.splice(index, 1);
+
+    const vendaAtualizada = await apiGetVenda(vendaIdAtual);
+    totalVenda = vendaAtualizada.valorTotal;
+
     renderizarItens();
   } catch (e) {
     showNotificationError(e.message);
@@ -321,7 +330,7 @@ btnFinalizarVenda.addEventListener("click", () => {
   }
 
   pagamentos = [];
-  totalOriginal = parseFloat(subtotalVenda.textContent.replace("R$ ", "").replace(",", ".")) || 0;
+  totalOriginal = totalVenda;
   restanteAtual = totalOriginal;
   document.getElementById("valorTotalModal").textContent = `R$ ${restanteAtual.toFixed(2)}`;
   valorRecebidoInput.value = restanteAtual.toFixed(2);
@@ -443,7 +452,9 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
       e.stopPropagation();
-      btnConfirmarFinalizacao.click();
+      if (!btnConfirmarFinalizacao.disabled) {
+        btnConfirmarFinalizacao.click();
+      }
     }
   }
 });
