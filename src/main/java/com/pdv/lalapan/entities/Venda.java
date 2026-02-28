@@ -1,5 +1,6 @@
 package com.pdv.lalapan.entities;
 
+import com.pdv.lalapan.enums.MetodoPagamento;
 import com.pdv.lalapan.enums.StatusVenda;
 import com.pdv.lalapan.exceptions.*;
 import jakarta.persistence.*;
@@ -72,7 +73,7 @@ public class Venda {
         return valorTotal;
     }
 
-    public void setValorTotal(BigDecimal valorTotal) {
+    private void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
 
@@ -88,7 +89,7 @@ public class Venda {
         return pagamentos;
     }
 
-    public void setPagamentos(List<Pagamento> pagamentos) {
+    private void setPagamentos(List<Pagamento> pagamentos) {
         this.pagamentos = pagamentos;
     }
 
@@ -96,7 +97,7 @@ public class Venda {
         return status;
     }
 
-    public void setStatus(StatusVenda status) {
+    private void setStatus(StatusVenda status) {
         this.status = status;
     }
 
@@ -104,7 +105,7 @@ public class Venda {
         return itens;
     }
 
-    public void setItens(List<VendaItens> itens) {
+    private void setItens(List<VendaItens> itens) {
         this.itens = itens;
     }
 
@@ -172,6 +173,45 @@ public class Venda {
     }
 
 
+    public void validarPagamento(BigDecimal totalPago) {
+        if (totalPago.compareTo(this.getValorTotal()) < 0) {
+            throw new ValorInsuficienteException(totalPago, this.getValorTotal());
+        }
+    }
 
+    public void registrarPagamento(MetodoPagamento metodo, BigDecimal valor) {
+
+        if (this.status != StatusVenda.ABERTA) {
+            throw new VendaNaoAbertaException(this.status, this.id);
+        }
+
+        if (valor.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ValorPagamentoInvalidoException(valor);
+        }
+
+        Pagamento pagamento = new Pagamento();
+        pagamento.setVenda(this);
+        pagamento.setMetodo(metodo);
+        pagamento.setValor(valor.setScale(2, RoundingMode.HALF_UP));
+
+        this.pagamentos.add(pagamento);
+    }
+
+    public BigDecimal getTroco(BigDecimal totalPago) {
+        return totalPago.subtract(this.getValorTotal());
+    }
+
+    public void processarBaixaEstoque() {
+        for (VendaItens item : this.itens) {
+            item.getProduto().baixarEstoque(item.getQuantidade());
+        }
+    }
+
+    public void abrirVenda(Usuario operador) {
+        this.setDataHoraAbertura(LocalDateTime.now());
+        this.setStatus(StatusVenda.ABERTA);
+        this.setValorTotal(BigDecimal.ZERO);
+        this.setOperador(operador);
+    }
 
 }

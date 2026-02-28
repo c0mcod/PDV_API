@@ -44,10 +44,7 @@ public class VendaService {
         }
 
         Venda venda = new Venda();
-        venda.setDataHoraAbertura(LocalDateTime.now());
-        venda.setStatus(StatusVenda.ABERTA);
-        venda.setValorTotal(BigDecimal.ZERO);
-        venda.setOperador(operador);
+        venda.abrirVenda(operador);
 
         Venda salva = vendaRepo.save(venda);
         return new VendaAberturaDTO(salva.getId());
@@ -91,52 +88,31 @@ public class VendaService {
 
     @Transactional
     public VendaFinalizadaResponseDTO fecharVenda(Long vendaId, VendaFinalizadaRequestDTO dto) {
-        return finalizarVenda(vendaId, dto, true);
+        return finalizarVenda(vendaId, dto);
     }
 
     @Transactional
-    public VendaFinalizadaResponseDTO forcarVendaFechada(Long idVenda, VendaFinalizadaRequestDTO dto) {
-        return finalizarVenda(idVenda, dto, false);
-    }
-
-    @Transactional
-    public VendaFinalizadaResponseDTO finalizarVenda(Long vendaId, VendaFinalizadaRequestDTO dto, boolean validarEstoque) {
+    public VendaFinalizadaResponseDTO finalizarVenda(Long vendaId, VendaFinalizadaRequestDTO dto) {
         Venda venda = vendaRepo.findById(vendaId)
                 .orElseThrow(() -> new VendaNaoEncontradaException(vendaId));
-
-        BigDecimal totalVenda = venda.getValorTotal();
 
         BigDecimal totalPago = dto.pagamentos().stream()
                 .map(PagamentoRequestDTO::valor)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .setScale(2, RoundingMode.HALF_UP);
 
-        if (totalPago.compareTo(totalVenda) < 0) {
-            throw new ValorInsuficienteException(totalPago, totalVenda);
-        }
+        venda.validarPagamento(totalPago);
+        venda.processarBaixaEstoque();
 
-        BigDecimal troco = totalPago.subtract(totalVenda);
-
-        // salva cada pagamento
         for (PagamentoRequestDTO pagamentoDTO : dto.pagamentos()) {
-            Pagamento pagamento = new Pagamento();
-            pagamento.setVenda(venda);
-            pagamento.setMetodo(pagamentoDTO.metodo());
-            pagamento.setValor(pagamentoDTO.valor());
-            venda.getPagamentos().add(pagamento);
-        }
-
-        for (VendaItens item : venda.getItens()) {
-            Produto produto = item.getProduto();
-
-            if (validarEstoque && item.getQuantidade().compareTo(produto.getQuantidadeEstoque()) > 0) {
-                throw new EstoqueInsuficienteException(produto.getNome(), item.getQuantidade(), produto.getQuantidadeEstoque());
-            }
-
-            produto.baixarEstoque(item.getQuantidade());
+            venda.registrarPagamento(
+                    pagamentoDTO.metodo(),
+                    pagamentoDTO.valor()
+            );
         }
 
         venda.fechar();
+        BigDecimal troco = venda.getTroco(totalPago);
 
         Venda vendaFinalizada = vendaRepo.save(venda);
         return new VendaFinalizadaResponseDTO(vendaFinalizada.getId(), troco);
