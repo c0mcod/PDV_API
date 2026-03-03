@@ -21,25 +21,53 @@ import java.util.List;
 @Service
 public class ExcelExportService {
 
-    public byte[] exportarProdutos(List<Produto> produtos) throws IOException {
+    public byte[] exportarProdutos(List<Produto> produtos, LocalDateTime criandoEm) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Produtos");
 
         CreationHelper createHelper = workbook.getCreationHelper();
 
+        // Estilo cabeçalho
+        XSSFCellStyle headerStyle = workbook.createCellStyle();
+        XSSFFont headerFont = workbook.createFont();
+        headerFont.setColor(new XSSFColor(new byte[]{(byte)255, (byte)255, (byte)255}, null));
+        headerFont.setBold(true);
+        headerStyle.setFont(headerFont);
+        headerStyle.setFillForegroundColor(new XSSFColor(new byte[]{(byte)0x1F, (byte)0x5C, (byte)0x7A}, null));
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+        headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
         // Estilo contábil
         XSSFCellStyle contabilStyle = workbook.createCellStyle();
         contabilStyle.setDataFormat(createHelper.createDataFormat().getFormat("_-R$* #,##0.00_-"));
 
-        // Cabeçalho
-        Row headerRow = sheet.createRow(0);
+        // Linhas do cabeçalho
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        Row titulo = sheet.createRow(0);
+        Cell tituloCell = titulo.createCell(0);
+        tituloCell.setCellValue("Relatório de Produtos");
+        tituloCell.setCellStyle(headerStyle);
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 8));
+
+        Row criadoEmRow = sheet.createRow(1);
+        Cell criadoEmCell = criadoEmRow.createCell(0);
+        criadoEmCell.setCellValue("Exportado em: " + criandoEm.format(formatter));
+        criadoEmCell.setCellStyle(headerStyle);
+        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 8));
+
+        sheet.createRow(2); // linha em branco
+
+        // Cabeçalho da tabela
+        Row headerRow = sheet.createRow(3);
         String[] colunas = {"CODIGO", "NOME", "CATEGORIA", "PREÇO DE CUSTO", "QUANTIDADE", "UNIDADE", "QTD. MIN", "VALOR", "STATUS"};
         for (int i = 0; i < colunas.length; i++) {
             headerRow.createCell(i).setCellValue(colunas[i]);
         }
 
         // Dados
-        int rowNum = 1;
+        int rowNum = 4;
         for (Produto produto : produtos) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(produto.getCodigo());
@@ -63,7 +91,7 @@ public class ExcelExportService {
 
         // Tabela formatada
         int lastRow = rowNum - 1;
-        AreaReference area = new AreaReference(new CellReference(0, 0), new CellReference(lastRow, 8), SpreadsheetVersion.EXCEL2007);
+        AreaReference area = new AreaReference(new CellReference(3, 0), new CellReference(lastRow, 8), SpreadsheetVersion.EXCEL2007);
         XSSFTable tabela = sheet.createTable(area);
         tabela.setName("Produtos");
         tabela.setDisplayName("Produtos");
@@ -86,13 +114,12 @@ public class ExcelExportService {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Historico de vendas");
 
-        // Estilos
         CreationHelper createHelper = workbook.getCreationHelper();
 
-        // Estilo cabeçalho (título, período, operador)
+        // Estilo cabeçalho
         XSSFCellStyle headerStyle = workbook.createCellStyle();
         XSSFFont headerFont = workbook.createFont();
-        headerFont.setColor(new XSSFColor(new byte[]{(byte)255, (byte)255, (byte)255}, null)); // branco
+        headerFont.setColor(new XSSFColor(new byte[]{(byte)255, (byte)255, (byte)255}, null));
         headerFont.setBold(true);
         headerStyle.setFont(headerFont);
         headerStyle.setFillForegroundColor(new XSSFColor(new byte[]{(byte)0x1F, (byte)0x5C, (byte)0x7A}, null));
@@ -108,7 +135,6 @@ public class ExcelExportService {
         XSSFCellStyle contabilStyle = workbook.createCellStyle();
         contabilStyle.setDataFormat(createHelper.createDataFormat().getFormat("_-R$* #,##0.00_-"));
 
-        // Linhas do cabeçalho
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
         Row titulo = sheet.createRow(0);
@@ -130,15 +156,15 @@ public class ExcelExportService {
         sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 5));
 
         Row criadoEmRow = sheet.createRow(3);
-        Cell criadoEmCell = operadorRow.createCell(0);
-        operadorCell.setCellValue("Criado em: " + criandoEm.format(formatter));
-        operadorCell.setCellStyle(headerStyle);
+        Cell criadoEmCell = criadoEmRow.createCell(0);
+        criadoEmCell.setCellValue("Criado em: " + criandoEm.format(formatter));
+        criadoEmCell.setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 5));
 
         sheet.createRow(4); // linha em branco
 
         // Cabeçalho da tabela
-        Row headerRow = sheet.createRow(4);
+        Row headerRow = sheet.createRow(5);
         String[] colunas = {"ID VENDA", "DATA_ABERTURA", "DATA_FECHAMENTO", "OPERADOR", "VALOR_TOTAL", "TOTAL_ITENS"};
         for (int i = 0; i < colunas.length; i++) {
             Cell cell = headerRow.createCell(i);
@@ -146,7 +172,7 @@ public class ExcelExportService {
         }
 
         // Dados
-        int rowNum = 5;
+        int rowNum = 6;
         for (HistoricoVendasResponseDTO historico : vendas) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(historico.vendaId());
@@ -170,7 +196,7 @@ public class ExcelExportService {
 
         // Tabela formatada
         int lastRow = rowNum - 1;
-        AreaReference area = new AreaReference(new CellReference(4, 0), new CellReference(lastRow, 5), SpreadsheetVersion.EXCEL2007);
+        AreaReference area = new AreaReference(new CellReference(5, 0), new CellReference(lastRow, 5), SpreadsheetVersion.EXCEL2007);
         XSSFTable tabela = sheet.createTable(area);
         tabela.setName("HistoricoVendas");
         tabela.setDisplayName("HistoricoVendas");

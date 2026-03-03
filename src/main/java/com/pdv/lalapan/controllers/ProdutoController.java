@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -81,7 +82,8 @@ public class ProdutoController {
     public ResponseEntity<byte[]> exportarExcel() throws IOException {
         List<Produto> produtos = produtoService.findAllParaExportacao();
 
-        byte[] excelBytes = excelExportService.exportarProdutos(produtos);
+        LocalDateTime exportTime = LocalDateTime.now();
+        byte[] excelBytes = excelExportService.exportarProdutos(produtos, exportTime);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=produtos.xlsx");
