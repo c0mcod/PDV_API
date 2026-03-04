@@ -21,6 +21,15 @@ async function apiGetAllProducts() {
   return response.json();
 }
 
+// Contagem sem páginação de stats
+async function apiGetStatsProducts() {
+  const response = await fetch(`${API_BASE_URL}/produto/stats`);
+  if (!response.ok) {
+    throw new Error("Erro ao buscar Stats");
+  }
+  return response.json();
+}
+
 async function apiRegistrarEntrada(produtoId, quantidade) {
   const response = await fetch(`${API_BASE_URL}/produto/${produtoId}/adicionar-estoque`, {
     method: "POST",

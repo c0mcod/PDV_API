@@ -35,6 +35,12 @@ async function carregarProdutos(page = 0) {
         const todosProdutos = await apiGetAllProducts();
         atualizarEstatisticas(todosProdutos);
 
+        const stats = await apiGetStatsProducts();
+        document.getElementById('statCustoTotal').textContent =
+            'R$ ' + stats.totalCusto.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+        document.getElementById('statValorVenda').textContent =
+            'R$ ' + stats.totalVenda.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+
     } catch (error) {
         console.error('Erro ao carregar produtos:', error);
         showNotificationError('Erro ao carregar produtos do servidor');
@@ -92,16 +98,13 @@ function renderizarProdutos(produtos) {
 // ===================================
 function atualizarEstatisticas(produtos) {
     const total = produtos.length;
-    const valorTotal = produtos.reduce((soma, p) => soma + (p.preco * p.quantidadeEstoque), 0);
     const produtosBaixos = produtos.filter(p => p.quantidadeEstoque <= p.estoqueMinimo && p.quantidadeEstoque > p.estoqueMinimo * 0.5).length;
     const produtosCriticos = produtos.filter(p => p.quantidadeEstoque <= p.estoqueMinimo * 0.5).length;
 
-    // Atualizar cards
     const cards = document.querySelectorAll('.stat-card');
     if (cards[0]) cards[0].querySelector('.stat-value').textContent = total;
-    if (cards[1]) cards[1].querySelector('.stat-value').textContent = formatarValorTotal(valorTotal);
-    if (cards[2]) cards[2].querySelector('.stat-value').textContent = produtosBaixos;
-    if (cards[3]) cards[3].querySelector('.stat-value').textContent = produtosCriticos;
+    if (cards[3]) cards[3].querySelector('.stat-value').textContent = produtosBaixos;
+    if (cards[4]) cards[4].querySelector('.stat-value').textContent = produtosCriticos;
 }
 
 // ===================================

@@ -315,10 +315,7 @@ function atualizarResumoEstoque(resumo) {
 }
 
 function formatarValor(valor) {
-    if (valor >= 1000) {
-        return `R$ ${(valor / 1000).toFixed(1)}K`;
-    }
-    return `R$ ${valor.toFixed(2)}`;
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
 // ===================================
