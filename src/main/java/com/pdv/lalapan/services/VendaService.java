@@ -97,7 +97,6 @@ public class VendaService {
         return new VendaFinalizadaResponseDTO(vendaFinalizada.getId(), troco);
     }
 
-
     @Transactional
     public CancelarVendaDTO cancelarVenda(Long vendaId) {
         Venda venda = vendaRepo.findById(vendaId)
@@ -116,12 +115,10 @@ public class VendaService {
         Venda venda = vendaRepo.findById(vendaId)
                 .orElseThrow(() -> new VendaNaoEncontradaException(vendaId));
 
-        if(venda.getStatus() != StatusVenda.ABERTA) {
-            throw new VendaNaoAbertaException(venda.getStatus(), vendaId);
-        }
-
+        venda.validarStatus(vendaId);
         venda.removerItem(vendaItemId);
         Venda vendaSalva = vendaRepo.save(venda);
+
         return new CancelarItemDTO(
                 vendaSalva.getId(),
                 vendaItemId
@@ -131,20 +128,6 @@ public class VendaService {
     public VendaDetalhadaDTO buscarVendaDetalhada(Long vendaId) {
         Venda venda = vendaRepo.findById(vendaId)
                 .orElseThrow(() -> new VendaNaoEncontradaException(vendaId));
-        List<VendaItemDTO> itens = venda.getItens().stream()
-                .map(item -> new VendaItemDTO(
-                        item.getId(),
-                        item.getProduto().getId(),
-                        item.getProduto().getNome(),
-                        item.getPrecoUnitario(),
-                        item.getQuantidade()
-
-                )).toList();
-
-        return new VendaDetalhadaDTO(
-                venda.getId(),
-                venda.getValorTotal(),
-                itens
-        );
+        return new VendaDetalhadaDTO(venda);
     }
 }

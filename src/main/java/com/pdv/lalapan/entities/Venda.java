@@ -232,5 +232,4 @@ public class Venda {
             throw new VendaNaoAbertaException(this.getStatus(), vendaId);
         }
     }
-
 }
