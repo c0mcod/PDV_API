@@ -16,7 +16,13 @@ public class Usuario {
 
     private Boolean ativo;
 
-    public Usuario() {}
+    protected Usuario() {}
+
+    public Usuario(String nome, String username, Boolean ativo) {
+        this.nome = nome;
+        this.username = username;
+        this.ativo = ativo;
+    }
 
     public Long getId() {
         return id;
@@ -30,7 +36,7 @@ public class Usuario {
         return nome;
     }
 
-    public void setNome(String nome) {
+    private void setNome(String nome) {
         this.nome = nome;
     }
 
@@ -38,7 +44,7 @@ public class Usuario {
         return ativo;
     }
 
-    public void setAtivo(Boolean ativo) {
+    private void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
 
@@ -46,7 +52,22 @@ public class Usuario {
         return username;
     }
 
-    public void setUsername(String username) {
+    private void setUsername(String username) {
         this.username = username;
+    }
+
+    public void atualizarUsuario(String nome, String username, Boolean ativo) {
+        // TODO: Adicionar validações
+        this.nome = nome;
+        this.username = username;
+        this.ativo = ativo;
+    }
+
+    public void desativarUser() {
+        this.ativo = false;
+    }
+
+    public void ativarUser() {
+        this.ativo = true;
     }
 }

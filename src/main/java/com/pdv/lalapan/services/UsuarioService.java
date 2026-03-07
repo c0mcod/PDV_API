@@ -20,11 +20,11 @@ public class UsuarioService {
     }
 
     public UsuarioResponseDTO createUser(UsuarioCreateDTO dto) {
-        Usuario user = new Usuario();
-
-        user.setNome(dto.nome());
-        user.setUsername(dto.username());
-        user.setAtivo(true);
+        Usuario user = new Usuario(
+                dto.nome(),
+                dto.username(),
+                true
+        );
 
         Usuario userSalvo = userRepo.save(user);
         return new UsuarioResponseDTO(userSalvo);
@@ -34,9 +34,11 @@ public class UsuarioService {
         Usuario newUser = userRepo.findById(idUser)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(idUser));
 
-        newUser.setNome(dto.nome());
-        newUser.setUsername(dto.username());
-        newUser.setAtivo(true);
+        newUser.atualizarUsuario(
+                dto.nome(),
+                dto.username(),
+                true
+        );
 
         Usuario usuarioAtualizado = userRepo.save(newUser);
         return UsuarioAtualizadoDTO.fromEntity(usuarioAtualizado);
@@ -52,14 +54,14 @@ public class UsuarioService {
     public void desativar(Long id) {
         Usuario user = userRepo.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
-        user.setAtivo(false);
+        user.desativarUser();
         userRepo.save(user);
     }
 
     public void ativar(Long id) {
         Usuario user = userRepo.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
-        user.setAtivo(true);
+        user.ativarUser();
         userRepo.save(user);
     }
 
