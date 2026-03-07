@@ -59,30 +59,14 @@ public class VendaService {
         Produto produto = prodRepo.findById(dto.idProduto())
                 .orElseThrow(() -> new ProdutoInexistenteException(dto.idProduto()));
 
-        if (venda.getStatus() != StatusVenda.ABERTA) {
-            throw new VendaNaoAbertaException(venda.getStatus(), vendaId);
-        }
-
-        VendaItens item = new VendaItens();
-        item.setProduto(produto);
-        item.setQuantidade(dto.quantidade());
-
-        if (item.getQuantidade().compareTo(produto.getQuantidadeEstoque()) > 0) {
-            System.out.println("AVISO: Adicionando mais itens que o estoque disponível!");
-        }
-
-        item.setPrecoUnitario(produto.getPreco());
-        item.calcularSubTotal();
-
-        venda.adicionarItem(item);
-
+        venda.validarStatus(vendaId);
+        VendaItens item = venda.registrarProduto(produto, dto.quantidade());
         Venda vendaSalva = vendaRepo.save(venda);
-        VendaItens itemSalvo = vendaSalva.getItens().get(vendaSalva.getItens().size() - 1);
 
         return new VendaAddItemResponseDTO(
                 vendaSalva.getId(),
                 vendaSalva.getValorTotal(),
-                itemSalvo.getId()
+                item.getId()
         );
     }
 

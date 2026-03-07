@@ -117,11 +117,25 @@ public class Venda {
         this.dataHoraCancelamento = dataHoraCancelamento;
     }
 
+    // === MÉTODOS AUXILIARES DE VENDA ===
     public void adicionarItem(VendaItens item) {
         item.setVenda(this);
         itens.add(item);
 
         recalcularValorTotal();
+    }
+
+    public VendaItens registrarProduto(Produto produto, BigDecimal quantidade){
+        VendaItens item = new VendaItens();
+
+        item.setProduto(produto);
+        item.setQuantidade(quantidade);
+        item.setPrecoUnitario(produto.getPreco());
+        item.calcularSubTotal();
+
+        adicionarItem(item);
+
+        return item;
     }
 
     private void recalcularValorTotal() {
@@ -172,7 +186,6 @@ public class Venda {
         recalcularValorTotal();
     }
 
-
     public void validarPagamento(BigDecimal totalPago) {
         if (totalPago.compareTo(this.getValorTotal()) < 0) {
             throw new ValorInsuficienteException(totalPago, this.getValorTotal());
@@ -212,6 +225,12 @@ public class Venda {
         this.setStatus(StatusVenda.ABERTA);
         this.setValorTotal(BigDecimal.ZERO);
         this.setOperador(operador);
+    }
+
+    public void validarStatus(Long vendaId) {
+        if (this.getStatus() != StatusVenda.ABERTA) {
+            throw new VendaNaoAbertaException(this.getStatus(), vendaId);
+        }
     }
 
 }
