@@ -15,8 +15,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErroResponse> handlerEstoqueInsuficiente(EstoqueInsuficienteException e) {
         DetalhesEstoque detalhes = new DetalhesEstoque(
                 e.getNomeProduto(),
-                e.getQuantidade(),
-                e.getQuantidadeEstoque()
+                e.getQuantidadeEstoque(),
+                e.getQuantidade()
         );
 
         ErroResponse erro = new ErroResponse(

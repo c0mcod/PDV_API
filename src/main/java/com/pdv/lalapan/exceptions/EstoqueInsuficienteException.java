@@ -9,7 +9,7 @@ public class EstoqueInsuficienteException extends RuntimeException{
 
     public EstoqueInsuficienteException(String nomeProduto, BigDecimal quantidade, BigDecimal quantidadeEstoque) {
         super(String.format(
-                "Estoque insuficiente para o produto '%s'. Solicitado: %d, Disponível: %.2f",
+                "Estoque insuficiente para o produto '%s'. Solicitado: %.2f, Disponível: %.2f",
                 nomeProduto, quantidade, quantidadeEstoque
         ));
         this.nomeProduto = nomeProduto;

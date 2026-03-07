@@ -168,7 +168,7 @@ async function apiFinalizarVenda(vendaId, dadosPagamento) {
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Erro ao finalizar venda");
+    throw new Error(error.mensagem || "Erro ao finalizar venda");
   }
 
   return response.json();
