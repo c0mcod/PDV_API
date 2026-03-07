@@ -154,19 +154,18 @@ btnAdicionarItem.addEventListener("click", async () => {
   btnAdicionarItem.textContent = "Adicionando...";
 
   try {
-    const response = await apiAdicionarItemVenda(vendaIdAtual, {
+    await apiAdicionarItemVenda(vendaIdAtual, {
       idProduto: produto.id,
       quantidade: quantidadeArredondada
     });
 
     const vendaAtualizada = await apiGetVenda(vendaIdAtual);
     totalVenda = vendaAtualizada.valorTotal;
-
-    itensVenda.push({
-      itemId: response.itemId,
-      productId: produto.id,
-      quantity: quantidadeArredondada
-    });
+    itensVenda = vendaAtualizada.itens.map(item => ({
+      itemId: item.itemId,
+      productId: item.produtoId,
+      quantity: item.quantidade
+    }));
 
     renderizarItens();
     quantidadeInput.value = "1.000";
