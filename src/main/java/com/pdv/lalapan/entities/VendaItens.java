@@ -11,6 +11,7 @@ public class VendaItens {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(precision = 38, scale = 3)
     private BigDecimal quantidade;
 
     private BigDecimal precoUnitario;

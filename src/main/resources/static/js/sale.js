@@ -114,7 +114,7 @@ function atualizarProdutoDestaque(produto) {
     precoTotalInput.value = "";
     return;
   }
-  const quantidadeLimitada = Math.round(quantidade * 1000) / 1000;
+  const quantidadeLimitada = Math.floor(quantidade * 1000) / 1000;
 
   produtoTitulo.textContent = `${quantidadeLimitada} x ${produto.nome}`;
   precoUnitarioInput.value = `R$ ${produto.preco.toFixed(2)}`;
@@ -147,7 +147,7 @@ btnAdicionarItem.addEventListener("click", async () => {
     return;
   }
 
-  const quantidadeArredondada = Math.round(quantidade * 1000) / 1000;
+  const quantidadeArredondada = Math.floor(quantidade * 1000) / 1000;
 
   btnAdicionarItem.disabled = true;
   const textoOriginal = btnAdicionarItem.textContent;

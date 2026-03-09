@@ -320,21 +320,36 @@ async function apiGetResumoEstoque() {
   return response.json();
 }
 
-
-// Modal de Erro
+// Modal de erro
 function showNotificationError(mensagem) {
   document.getElementById('notificationErrorMessage').textContent = mensagem;
   document.getElementById('notificationErrorModal').style.display = 'flex';
+
+  const handler = (e) => {
+    if (e.key === 'Escape') {
+      closeNotificationErrorModal();
+      document.removeEventListener('keydown', handler);
+    }
+  };
+  document.addEventListener('keydown', handler);
+}
+
+// Modal de sucesso
+function showNotificationSuccess(mensagem) {
+  document.getElementById('notificationSuccessMessage').textContent = mensagem;
+  document.getElementById('notificationSuccessModal').style.display = 'flex';
+
+  const handler = (e) => {
+    if (e.key === 'Escape') {
+      closeNotificationSuccessModal();
+      document.removeEventListener('keydown', handler);
+    }
+  };
+  document.addEventListener('keydown', handler);
 }
 
 function closeNotificationErrorModal() {
   document.getElementById('notificationErrorModal').style.display = 'none';
-}
-
-// Modal de Sucesso
-function showNotificationSuccess(mensagem) {
-  document.getElementById('notificationSuccessMessage').textContent = mensagem;
-  document.getElementById('notificationSuccessModal').style.display = 'flex';
 }
 
 function closeNotificationSuccessModal() {
