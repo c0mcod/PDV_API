@@ -2,6 +2,7 @@ package com.pdv.lalapan.services;
 
 import com.pdv.lalapan.dto.cancelamento.CancelarItemDTO;
 import com.pdv.lalapan.dto.cancelamento.CancelarVendaDTO;
+import com.pdv.lalapan.dto.impressao.ImpressaoDTO;
 import com.pdv.lalapan.dto.venda.*;
 import com.pdv.lalapan.entities.*;
 import com.pdv.lalapan.enums.StatusVenda;
@@ -10,6 +11,8 @@ import com.pdv.lalapan.repositories.ProdutoRepository;
 import com.pdv.lalapan.repositories.UsuarioRepository;
 import com.pdv.lalapan.repositories.VendaRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,10 +28,16 @@ public class VendaService {
     private final ProdutoRepository prodRepo;
     private final UsuarioRepository userRepo;
 
-    public VendaService(VendaRepository vendaRepo, ProdutoRepository prodRepo, UsuarioRepository userRepo) {
+    private final ImpressoraService impressoraService;
+
+    private static final Logger log =
+            LoggerFactory.getLogger(VendaService.class);
+
+    public VendaService(VendaRepository vendaRepo, ProdutoRepository prodRepo, UsuarioRepository userRepo, ImpressoraService impressoraService) {
         this.vendaRepo = vendaRepo;
         this.prodRepo = prodRepo;
         this.userRepo = userRepo;
+        this.impressoraService = impressoraService;
     }
 
 
@@ -89,12 +98,31 @@ public class VendaService {
                     pagamentoDTO.valor()
             );
         }
+        ImpressaoDTO impressaoDTO = new ImpressaoDTO(
+                venda.getId(),
+                venda.getDataHoraAbertura(),
+                venda.getDataHoraFechamento(),
+                venda.getItens().stream().map(VendaItemDTO::new).toList(),
+                venda.getValorTotal(),
+                dto.pagamentos()
+        );
 
         venda.fechar();
         BigDecimal troco = venda.getTroco(totalPago);
 
-        Venda vendaFinalizada = vendaRepo.save(venda);
-        return new VendaFinalizadaResponseDTO(vendaFinalizada.getId(), troco);
+        vendaRepo.save(venda);
+
+        /*
+        * Chama metodo para impressão de cupom não fiscal
+        * Para garantir a transação finalize perfeitamente, só é chamado após salvar no banco
+         */
+        try {
+            impressoraService.imprimirCupom(impressaoDTO, venda.getOperador().getNome());
+        } catch (Exception e) {
+            log.error("Erro ao imprimir venda {}", venda.getId(), e);
+        }
+
+        return new VendaFinalizadaResponseDTO(venda.getId(), troco);
     }
 
     @Transactional
