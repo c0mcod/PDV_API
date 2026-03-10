@@ -82,7 +82,15 @@ produtoCodigoInput.addEventListener("input", () => {
 });
 
 produtoCodigoInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") btnAdicionarItem.click();
+  if (e.key === "Enter") {
+    const produto = obterProdutoSelecionado();
+    if (produto) {
+      atualizarProdutoDestaque(produto);
+      setTimeout(() => btnAdicionarItem.click(), 500);
+    } else {
+      btnAdicionarItem.click();
+    }
+  }
 });
 
 quantidadeInput.addEventListener("input", () => {
