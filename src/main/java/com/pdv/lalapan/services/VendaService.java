@@ -98,6 +98,10 @@ public class VendaService {
                     pagamentoDTO.valor()
             );
         }
+
+        venda.fechar();
+        BigDecimal troco = venda.getTroco(totalPago);
+
         ImpressaoDTO impressaoDTO = new ImpressaoDTO(
                 venda.getId(),
                 venda.getDataHoraAbertura(),
@@ -106,9 +110,6 @@ public class VendaService {
                 venda.getValorTotal(),
                 dto.pagamentos()
         );
-
-        venda.fechar();
-        BigDecimal troco = venda.getTroco(totalPago);
 
         vendaRepo.save(venda);
 
