@@ -97,7 +97,8 @@ public interface VendaRepository extends JpaRepository<Venda, Long> {
     Optional<Venda> buscarDetalhe(@Param("id") Long id);
 
     @Query("SELECT new com.pdv.lalapan.dto.historicoVendas.HistoricoStatsDTO(COUNT(v), SUM(v.valorTotal)) " +
-            "FROM Venda v WHERE v.dataHoraAbertura BETWEEN :inicio AND :fim " +
+            "FROM Venda v WHERE v.status = 'FINALIZADA' " +
+            "AND v.dataHoraAbertura BETWEEN :inicio AND :fim " +
             "AND (:operadorId IS NULL OR v.operador.id = :operadorId)")
     HistoricoStatsDTO buscarStats(@Param("inicio") LocalDateTime inicio,
                                   @Param("fim") LocalDateTime fim,
