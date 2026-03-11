@@ -133,7 +133,7 @@ function renderizarTabela(vendas) {
 
     tbody.innerHTML = vendas.map(v => `
         <tr>
-            <td><span class="venda-id">#${v.vendaId}</span></td>
+            <td><span class="venda-id">#000${v.vendaId}</span></td>
             <td>${formatarDataHora(v.dataHoraAbertura)}</td>
             <td>${v.operadorNome}</td>
             <td><span class="price-value">R$ ${v.valorTotal.toFixed(2)}</span></td>
@@ -229,6 +229,15 @@ async function abrirDetalhes(vendaId) {
                 <span>Total da Venda</span>
                 <span class="price-value">R$ ${v.valorTotal.toFixed(2)}</span>
             </div>
+            <div class="detalhes-pagamentos">
+            <div class="detalhes-pagamentos-titulo">Pagamentos</div>
+            ${v.pagamentos.map(p => `
+                <div class="detalhes-pagamento-item">
+                    <span>${p.metodo}</span>
+                    <span>R$ ${p.valor.toFixed(2)}</span>
+                </div>
+            `).join("")}
+        </div>
         `;
     } catch (e) {
         conteudo.innerHTML = `<p class="detalhes-loading">Erro ao carregar detalhes.</p>`;

@@ -437,3 +437,25 @@ svg {
     font-weight: 600;
     color: #212529;
 }
+
+.detalhes-pagamentos {
+    border-top: 1px solid #e9ecef;
+    padding-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.detalhes-pagamentos-titulo {
+    font-size: 11px;
+    font-weight: 700;
+    color: #868e96;
+    text-transform: uppercase;
+}
+
+.detalhes-pagamento-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #212529;
+}
