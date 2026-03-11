@@ -66,7 +66,7 @@ async function apiCreateProduct(product) {
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Erro ao criar produto");
+    throw error;
   }
 
   return response.json();

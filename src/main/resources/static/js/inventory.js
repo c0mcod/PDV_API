@@ -37,9 +37,9 @@ async function carregarProdutos(page = 0) {
 
         const stats = await apiGetStatsProducts();
         document.getElementById('statCustoTotal').textContent =
-            'R$ ' + stats.totalCusto.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+            'R$ ' + (stats.totalCusto || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
         document.getElementById('statValorVenda').textContent =
-            'R$ ' + stats.totalVenda.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+            'R$ ' + (stats.totalVenda || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
     } catch (error) {
         console.error('Erro ao carregar produtos:', error);
@@ -160,10 +160,10 @@ function irParaPagina(pagina) {
 function getStatusClass(quantidade, estoqueMinimo) {
     // Crítico: 50% ou menos do mínimo
     if (quantidade <= estoqueMinimo * 0.5) return 'stock-critico';
-    
+
     // Baixo: no mínimo ou menos
     if (quantidade <= estoqueMinimo) return 'stock-baixo';
-    
+
     // OK: acima do mínimo
     return 'stock-ok';
 }
@@ -277,6 +277,14 @@ function configurarModal() {
         e.preventDefault();
         await salvarProduto();
     });
+
+    // Cadastrar com Enter
+    form.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            salvarProduto();
+        }
+    });
 }
 
 async function salvarProduto() {
@@ -302,7 +310,7 @@ async function salvarProduto() {
         await carregarProdutos();
     } catch (error) {
         console.error('Erro ao salvar produto:', error);
-        showNotificationError('Erro ao salvar produto: ' + error.message);
+        showNotificationError('Erro ao salvar produto: ' + error.mensagem);
     }
 }
 
