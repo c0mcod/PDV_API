@@ -185,7 +185,7 @@ public class Produto {
     }
 
     public void validarQuantidade(BigDecimal quantidade) {
-        if (quantidade.compareTo(BigDecimal.ZERO) == 0) {
+        if (quantidade.compareTo(BigDecimal.ZERO) <= 0) {
             throw new QuantidadeInvalidaException(quantidade);
         }
     }
