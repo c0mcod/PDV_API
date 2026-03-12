@@ -81,15 +81,15 @@ public class ProdutoService {
         return prodRepo.findAll();
     }
 
-    public List<ProdutoResponseDTO> buscarTodosProdutos() {
-        return prodRepo.findByAtivoTrue()
+    public List<ProdutoResponseDTO> buscarTodosProdutos(boolean ativo) {
+        return prodRepo.findByAtivo(ativo)
                 .stream()
-                .map(ProdutoResponseDTO :: new)
+                .map(ProdutoResponseDTO::new)
                 .toList();
     }
 
-    public Page<ProdutoResponseDTO> buscarTodosProdutosPaginado(Pageable pageable) {
-        return prodRepo.findByAtivoTrue(pageable)
+    public Page<ProdutoResponseDTO> buscarTodosProdutosPaginado(Pageable pageable, boolean ativo) {
+        return prodRepo.findByAtivo(ativo, pageable)
                 .map(ProdutoResponseDTO::new);
     }
 
@@ -119,5 +119,13 @@ public class ProdutoService {
                 statsCusto,
                 statusVenda
         );
+    }
+
+    public void ativarProduto(Long produtoId) {
+        Produto produto = prodRepo.findById(produtoId)
+                .orElseThrow(() -> new ProdutoInexistenteException(produtoId));
+
+        produto.ativarProduto();
+        prodRepo.save(produto);
     }
 }

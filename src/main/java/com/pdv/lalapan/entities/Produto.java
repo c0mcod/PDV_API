@@ -237,4 +237,9 @@ public class Produto {
 
         return codigo + digitoVerificador;
     }
+
+    public void ativarProduto() {
+        this.ativo = true;
+    }
+
 }

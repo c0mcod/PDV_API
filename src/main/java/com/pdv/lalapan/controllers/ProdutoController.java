@@ -49,15 +49,17 @@ public class ProdutoController {
     @GetMapping("/lista")
     public ResponseEntity<Page<ProdutoResponseDTO>> procurarProdutosPage(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "true") boolean ativo) {
 
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(produtoService.buscarTodosProdutosPaginado(pageable));
+        return ResponseEntity.ok(produtoService.buscarTodosProdutosPaginado(pageable, ativo));
     }
 
     @GetMapping("/lista-todos")
-    public ResponseEntity<List<ProdutoResponseDTO>> procurarTodosProdutos() {
-        return ResponseEntity.ok(produtoService.buscarTodosProdutos());
+    public ResponseEntity<List<ProdutoResponseDTO>> procurarTodosProdutos(
+            @RequestParam(defaultValue = "true") boolean ativo) {
+        return ResponseEntity.ok(produtoService.buscarTodosProdutos(ativo));
     }
 
     @DeleteMapping("/{id}")
@@ -83,6 +85,12 @@ public class ProdutoController {
     public ResponseEntity<ProdutoResponseDTO> adicionar(@PathVariable Long id, @RequestBody EntradaProdutoRequestDTO request) {
         ProdutoResponseDTO produtoAtualizado = produtoService.registrarEntrada(id, request);
         return ResponseEntity.ok(produtoAtualizado);
+    }
+
+    @PostMapping("/{id}/ativar-produto")
+    public ResponseEntity<Void> ativarProduto(@PathVariable Long id) {
+        produtoService.ativarProduto(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/exportar/excel")

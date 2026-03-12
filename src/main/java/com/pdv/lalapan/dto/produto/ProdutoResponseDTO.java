@@ -15,6 +15,7 @@ public record ProdutoResponseDTO(
         String nome,
         BigDecimal preco,
         Unidade unidade,
+        Boolean ativo,
         Categoria categoria) {
 
     public ProdutoResponseDTO(Produto entity) {
@@ -26,6 +27,7 @@ public record ProdutoResponseDTO(
                 entity.getNome(),
                 entity.getPreco(),
                 entity.getUnidade(),
+                entity.getAtivo(),
                 entity.getCategoria());
     }
 }
