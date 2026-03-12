@@ -70,4 +70,9 @@ public class Usuario {
     public void ativarUser() {
         this.ativo = true;
     }
+
+    public String buscarNome() {
+        return this.getNome().toUpperCase();
+    }
+
 }

@@ -110,7 +110,7 @@ public class ExcelExportService {
         return outputStream.toByteArray();
     }
 
-    public byte[] exportarHistoricoVendas(List<HistoricoVendasResponseDTO> vendas, LocalDateTime dataInicio, LocalDateTime dataFim, Long operadorId, LocalDateTime criandoEm) throws IOException {
+    public byte[] exportarHistoricoVendas(List<HistoricoVendasResponseDTO> vendas, LocalDateTime dataInicio, LocalDateTime dataFim, String operadorNome, LocalDateTime criandoEm) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Historico de vendas");
 
@@ -151,7 +151,7 @@ public class ExcelExportService {
 
         Row operadorRow = sheet.createRow(2);
         Cell operadorCell = operadorRow.createCell(0);
-        operadorCell.setCellValue("Operador: " + (operadorId != null ? operadorId : "Todos"));
+        operadorCell.setCellValue("Operador: " + (operadorNome != null ? operadorNome : "Todos"));
         operadorCell.setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 5));
 

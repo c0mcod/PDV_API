@@ -51,6 +51,13 @@ public class UsuarioService {
         return new UsuarioResponseDTO(user);
     }
 
+    public String buscarNome(Long id) {
+        Usuario user = userRepo.findById(id)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
+
+        return user.buscarNome();
+    }
+
     public void desativar(Long id) {
         Usuario user = userRepo.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
