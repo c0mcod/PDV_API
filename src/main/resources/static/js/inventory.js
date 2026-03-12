@@ -6,6 +6,7 @@ let todosOsProdutos = [];
 let paginaAtual = 0;
 let totalPaginas = 0;
 const tamanhoPagina = 10;
+let filtroAtivo = true;
 
 // Inicializar quando a página carregar
 document.addEventListener('DOMContentLoaded', async () => {
@@ -26,14 +27,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ===================================
 async function carregarProdutos(page = 0) {
     try {
-        const data = await apiGetProducts(page, tamanhoPagina);
+        const data = await apiGetProducts(page, tamanhoPagina, filtroAtivo);
         totalPaginas = data.totalPages;
         todosOsProdutos = data.content;
+
+        // Busca produtos conforme o filtro atual
+        const produtos = await apiGetAllProducts(filtroAtivo);
         renderizarProdutos(data.content);
         renderizarPaginacao(data);
 
-        const todosProdutos = await apiGetAllProducts();
-        atualizarEstatisticas(todosProdutos);
+        atualizarEstatisticas(await apiGetAllProducts(true));
 
         const stats = await apiGetStatsProducts();
         document.getElementById('statCustoTotal').textContent =
@@ -84,9 +87,12 @@ function renderizarProdutos(produtos) {
             </td>
             <td>
                 <div class="action-buttons">
-                    <button class="btn-action btn-entrada" onclick="abrirModalEntrada(${produto.id})">Entrada</button>
-                    <button class="btn-action btn-editar" onclick="editarProduto(${produto.id})">Editar</button>
-                    <button class="btn-action btn-excluir" onclick="confirmarExclusao(${produto.id})">Excluir</button>
+                ${produto.ativo
+                ? `<button class="btn-action btn-entrada" onclick="abrirModalEntrada(${produto.id})">Entrada</button>
+                <button class="btn-action btn-editar" onclick="editarProduto(${produto.id})">Editar</button>
+                <button class="btn-action btn-excluir" onclick="confirmarExclusao(${produto.id})">Excluir</button>`
+                : `<button class="btn-action btn-ativar" onclick="ativarProduto(${produto.id})">Ativar</button>`
+            }
                 </div>
             </td>
         </tr>
@@ -188,22 +194,21 @@ function formatarValorTotal(valor) {
 let todosProdutosCache = [];
 
 function configurarEventos() {
+    // Busca
     const searchBox = document.querySelector('.search-box');
     if (searchBox) {
         searchBox.addEventListener('input', async (e) => {
             const termo = e.target.value.toLowerCase().trim();
 
             if (!termo) {
-                // Campo vazio: volta para a listagem paginada
                 todosProdutosCache = [];
                 document.getElementById('paginacaoContainer').style.display = '';
                 await carregarProdutos(paginaAtual);
                 return;
             }
 
-            // Primeira busca: carrega todos os produtos uma vez
             if (todosProdutosCache.length === 0) {
-                todosProdutosCache = await apiGetAllProducts();
+                todosProdutosCache = await apiGetAllProducts(filtroAtivo);
             }
 
             const filtrados = todosProdutosCache.filter(p =>
@@ -214,6 +219,15 @@ function configurarEventos() {
 
             document.getElementById('paginacaoContainer').style.display = 'none';
             renderizarProdutos(filtrados);
+        });
+    }
+
+    const selectFiltro = document.getElementById('filtroStatus');
+    if (selectFiltro) {
+        selectFiltro.addEventListener('change', (e) => {
+            filtroAtivo = e.target.value === 'true';
+            todosProdutosCache = [];
+            carregarProdutos(0);
         });
     }
 }
@@ -309,7 +323,7 @@ async function salvarProduto() {
         form.reset();
         await carregarProdutos();
     } catch (error) {
-        console.error('Erro ao salvar produto:', error);
+        console.error('Erro ao salvar produto:');
         showNotificationError('Erro ao salvar produto: ' + error.mensagem);
     }
 }
@@ -499,6 +513,19 @@ document.getElementById('btn-confirmar-exclusao').onclick = async () => {
 // BOTÃO DE EXPORTAR PRODUTOS
 // ===================================
 document.getElementById('btn-exportar').addEventListener('click', apiExportarProdutos);
+
+// ===================================
+// BOTÃO DE ATIVAR PRODUTO
+// ===================================
+async function ativarProduto(produtoId) {
+    try {
+        await apiAtivarProduto(produtoId);
+        showNotificationSuccess('Produto ativado com sucesso!');
+        await carregarProdutos(paginaAtual);
+    } catch (error) {
+        showNotificationError('Erro ao ativar produto');
+    }
+}
 
 // ===================================
 // BOTÃO DE COLAPSAR MENU

@@ -684,6 +684,20 @@ svg {
     background-color: #d0ebff;
 }
 
+#filtroStatus {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
+#filtroStatus:focus {
+    border-color: #6c63ff;
+}
+
 
 /* Scrollbars */
 ::-webkit-scrollbar {

@@ -4,8 +4,8 @@ const API_BASE_URL = "http://localhost:8090";
    PRODUTOS
 ======================= */
 
-async function apiGetProducts(page = 0, size = 10) {
-  const response = await fetch(`${API_BASE_URL}/produto/lista?page=${page}&size=${size}`);
+async function apiGetProducts(page = 0, size = 10, ativo = true) {
+  const response = await fetch(`${API_BASE_URL}/produto/lista?page=${page}&size=${size}&ativo=${ativo}`);
   if (!response.ok) {
     throw new Error("Erro ao buscar produtos");
   }
@@ -13,8 +13,8 @@ async function apiGetProducts(page = 0, size = 10) {
 }
 
 // Contagem sem páginação de stats
-async function apiGetAllProducts() {
-  const response = await fetch(`${API_BASE_URL}/produto/lista-todos`);
+async function apiGetAllProducts(ativo = true) {
+  const response = await fetch(`${API_BASE_URL}/produto/lista-todos?ativo=${ativo}`);
   if (!response.ok) {
     throw new Error("Erro ao buscar todos os produtos");
   }
@@ -93,6 +93,13 @@ async function apiExportarProdutos() {
         console.error('Erro:', error);
         alert('Erro ao exportar produtos');
     }
+}
+
+async function apiAtivarProduto(id) {
+    const response = await fetch(`${API_BASE_URL}/produto/${id}/ativar-produto`, {
+        method: "POST"
+    });
+    if (!response.ok) throw new Error("Erro ao ativar produto");
 }
 
 /* =======================
