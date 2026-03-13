@@ -401,6 +401,13 @@ svg {
     color: #212529;
 }
 
+/* --- Tabela do modal com bordas arredondadas --- */
+.detalhes-table-wrapper {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+}
+
 .detalhes-table {
     width: 100%;
     border-collapse: collapse;
@@ -427,17 +434,21 @@ svg {
 .detalhes-table tbody tr:last-child td { border-bottom: none; }
 .detalhes-table tbody tr:hover { background: #f8f9fa; }
 
+/* --- Total com fundo destacado --- */
 .detalhes-total {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 0 0 0;
-    border-top: 2px solid #dee2e6;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background-color: #f0fdf4;
+    border: 1px solid #d1fae5;
     font-size: 15px;
     font-weight: 600;
     color: #212529;
 }
 
+/* --- Pagamentos --- */
 .detalhes-pagamentos {
     border-top: 1px solid #e9ecef;
     padding-top: 14px;
@@ -458,4 +469,10 @@ svg {
     justify-content: space-between;
     font-size: 14px;
     color: #212529;
+}
+
+/* --- Troco destacado em verde --- */
+.detalhes-pagamento-item.troco {
+    font-weight: 700;
+    color: #28a745;
 }

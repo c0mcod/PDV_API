@@ -151,20 +151,17 @@ function renderizarPaginacao(data) {
     document.getElementById("paginacaoInfo").textContent =
         `Exibindo ${inicio}–${fim} de ${data.totalElements} vendas`;
 
-    // Botões de navegação
     document.getElementById("btnPrimeira").disabled = data.first;
     document.getElementById("btnAnterior").disabled = data.first;
     document.getElementById("btnProxima").disabled = data.last;
     document.getElementById("btnUltima").disabled = data.last;
 
-    // Páginas numeradas
     const paginasDiv = document.getElementById("paginasNumeradas");
     paginasDiv.innerHTML = "";
 
     const total = data.totalPages;
     const atual = data.number;
 
-    // Mostra no máximo 5 páginas ao redor da atual
     let inicio_p = Math.max(0, atual - 2);
     let fim_p = Math.min(total - 1, atual + 2);
 
@@ -207,6 +204,7 @@ async function abrirDetalhes(vendaId) {
                 <div class="detalhe-item"><span>Abertura</span><strong>${formatarDataHora(v.dataHoraAbertura)}</strong></div>
                 <div class="detalhe-item"><span>Fechamento</span><strong>${formatarDataHora(v.dataHoraFechamento)}</strong></div>
             </div>
+            <div class="detalhes-table-wrapper">
             <table class="detalhes-table">
                 <thead>
                     <tr>
@@ -227,19 +225,24 @@ async function abrirDetalhes(vendaId) {
                     `).join("")}
                 </tbody>
             </table>
+            </div>
             <div class="detalhes-total">
                 <span>Total da Venda</span>
                 <span class="price-value">R$ ${v.valorTotal.toFixed(2)}</span>
             </div>
             <div class="detalhes-pagamentos">
-            <div class="detalhes-pagamentos-titulo">Pagamentos</div>
-            ${v.pagamentos.map(p => `
-                <div class="detalhes-pagamento-item">
-                    <span>${p.metodo}</span>
-                    <span>R$ ${p.valor.toFixed(2)}</span>
-                </div>
-            `).join("")}
-        </div>
+                <div class="detalhes-pagamentos-titulo">Pagamentos</div>
+                ${v.pagamentos.map(p => `
+                    <div class="detalhes-pagamento-item">
+                        <span>${p.metodo}</span>
+                        <span>R$ ${p.valor.toFixed(2)}</span>
+                    </div>
+                `).join("")}
+                <div class="detalhes-pagamento-item troco">
+                    <span>Troco</span>
+                    <span>R$ ${v.troco.toFixed(2)}</span>
+                </div>  
+            </div>
         `;
     } catch (e) {
         conteudo.innerHTML = `<p class="detalhes-loading">Erro ao carregar detalhes.</p>`;

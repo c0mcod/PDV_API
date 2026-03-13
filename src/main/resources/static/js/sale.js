@@ -411,7 +411,7 @@ btnConfirmarFinalizacao.addEventListener("click", async () => {
     return;
   }
 
-  const valorPagamento = Math.min(recebido, restanteAtual);
+  const valorPagamento = recebido;
   pagamentos.push({ metodo: metodoPagamentoSelect.value, valor: valorPagamento });
 
   restanteAtual = parseFloat((restanteAtual - valorPagamento).toFixed(2));
