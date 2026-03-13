@@ -25,6 +25,9 @@ public class ImpressoraService {
     @Value("${pdv.printer.name}")
     private String printerName;
 
+    @Value("${pdv.printer.cnpj:00.000.000/0000-00}")
+    private String CNPJ;
+
     // ativar ou desativar o método de impressão(valor definido em application.properties)
     @Value("${pdv.printer.enabled:true}")
     private boolean printerEnabled;
@@ -58,7 +61,7 @@ public class ImpressoraService {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             String dataFormatada = dto.horaFechamento().format(formatter);
 
-            escpos.writeLF(titulo, "LALAPAN MERCEARIA/PANIFICADORA");
+            escpos.writeLF(titulo, CNPJ);
             escpos.writeLF(centralizado, "CNPJ: 00.000.000/0000-00");
             escpos.writeLF(centralizado, "AV TORREON, NUMERO - CAUCAIA - CE");
             escpos.writeLF("OPERADOR: " + operador.toUpperCase());

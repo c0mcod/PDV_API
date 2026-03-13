@@ -88,10 +88,6 @@ public class VendaService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .setScale(2, RoundingMode.HALF_UP);
 
-        log.info("totalPago: {}", totalPago);         // <- adiciona isso
-        log.info("valorTotal: {}", venda.getValorTotal()); // <- e isso
-        log.info("troco: {}", venda.getTroco(totalPago));
-
         venda.validarPagamento(totalPago);
         venda.processarBaixaEstoque();
 
