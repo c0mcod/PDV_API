@@ -15,6 +15,7 @@ public record ImpressaoDTO(
         LocalDateTime horaFechamento,
         List<VendaItemDTO> itens,
         BigDecimal valorTotal,
+        BigDecimal troco,
         List<PagamentoRequestDTO> pagamentos
 ) {
 

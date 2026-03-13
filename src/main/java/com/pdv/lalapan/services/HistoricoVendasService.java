@@ -1,6 +1,7 @@
 package com.pdv.lalapan.services;
 
 import com.pdv.lalapan.dto.historicoVendas.*;
+import com.pdv.lalapan.entities.Pagamento;
 import com.pdv.lalapan.entities.Venda;
 import com.pdv.lalapan.enums.StatusVenda;
 import com.pdv.lalapan.exceptions.VendaNaoAbertaException;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -77,6 +79,12 @@ public class HistoricoVendasService {
                 .map(p -> new PagamentoDetalheDTO(p.getMetodo(), p.getValor()))
                 .toList();
 
+        BigDecimal totalPago = venda.getPagamentos().stream()
+                .map(Pagamento::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal troco = totalPago.subtract(venda.getValorTotal());
+
 
         return new VendaDetalheDTO(
                 venda.getId(),
@@ -85,7 +93,8 @@ public class HistoricoVendasService {
                 venda.getDataHoraFechamento(),
                 venda.getValorTotal(),
                 itens,
-                pagamentos
+                pagamentos,
+                troco
         );
     }
 }

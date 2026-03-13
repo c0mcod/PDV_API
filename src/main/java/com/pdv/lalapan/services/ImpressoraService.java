@@ -83,6 +83,7 @@ public class ImpressoraService {
             }
 
             escpos.writeLF("--------------------------------");
+            escpos.writeLF("TROCO: R$ " + dto.troco());
             escpos.writeLF(bold, "TOTAL: R$ " + dto.valorTotal());
 
             // Rodapé
