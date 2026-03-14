@@ -107,3 +107,9 @@ if (btnAdmin) {
     window.location.href = '../pages/inventory.html';
   });
 }
+
+function fecharModalOperador() {
+  const operador = getOperadorSalvo();
+  if (!operador) return;
+  document.getElementById("modalOperador").classList.remove("ativo");
+}
