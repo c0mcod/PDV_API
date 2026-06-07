@@ -1,9 +1,17 @@
 package com.pdv.lalapan.entities;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity
-public class Usuario {
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,13 +22,17 @@ public class Usuario {
     @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(nullable = false)
+    private String password;
+
     private Boolean ativo;
 
     protected Usuario() {}
 
-    public Usuario(String nome, String username, Boolean ativo) {
+    public Usuario(String nome, String username, String password, Boolean ativo) {
         this.nome = nome;
         this.username = username;
+        this.password = password;
         this.ativo = ativo;
     }
 
@@ -56,6 +68,31 @@ public class Usuario {
         this.username = username;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() { return true; }
+
+    @Override
+    public boolean isAccountNonLocked() { return true; }
+
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
+
+    @Override
+    public boolean isEnabled() { return ativo; }
+
     public void atualizarUsuario(String nome, String username, Boolean ativo) {
         // TODO: Adicionar validações
         this.nome = nome;
@@ -74,5 +111,4 @@ public class Usuario {
     public String buscarNome() {
         return this.getNome().toUpperCase();
     }
-
 }
