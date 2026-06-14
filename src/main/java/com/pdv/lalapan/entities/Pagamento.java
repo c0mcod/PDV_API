@@ -13,7 +13,7 @@ public class Pagamento {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "venda_id")
+    @JoinColumn(name = "venda_id", nullable = false)
     private Venda venda;
 
     @Enumerated(EnumType.STRING)
