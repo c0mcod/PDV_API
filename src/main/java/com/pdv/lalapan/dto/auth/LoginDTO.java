@@ -1,3 +1,5 @@
 package com.pdv.lalapan.dto.auth;
 
-public record LoginDTO(String username, String password) {}
+import com.pdv.lalapan.enums.Role;
+
+public record LoginDTO(String nome, String password) {}

@@ -1,5 +1,6 @@
 package com.pdv.lalapan.entities;
 
+import com.pdv.lalapan.enums.Role;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,8 +20,9 @@ public class Usuario implements UserDetails {
 
     private String nome;
 
-    @Column(unique = true, nullable = false)
-    private String username;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(nullable = false)
     private String password;
@@ -29,10 +31,10 @@ public class Usuario implements UserDetails {
 
     protected Usuario() {}
 
-    public Usuario(String nome, String username, String password, Boolean ativo) {
+    public Usuario(String nome, String password, Role role, Boolean ativo) {
         this.nome = nome;
-        this.username = username;
         this.password = password;
+        this.role = role;
         this.ativo = ativo;
     }
 
@@ -60,16 +62,21 @@ public class Usuario implements UserDetails {
         this.ativo = ativo;
     }
 
-    public String getUsername() {
-        return username;
+    public Role getRole() {
+        return role;
     }
 
-    private void setUsername(String username) {
-        this.username = username;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return nome;
     }
 
     public void setPassword(String password) {
@@ -78,7 +85,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
@@ -93,10 +100,8 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isEnabled() { return ativo; }
 
-    public void atualizarUsuario(String nome, String username, Boolean ativo) {
-        // TODO: Adicionar validações
+    public void atualizarUsuario(String nome, Boolean ativo) {
         this.nome = nome;
-        this.username = username;
         this.ativo = ativo;
     }
 

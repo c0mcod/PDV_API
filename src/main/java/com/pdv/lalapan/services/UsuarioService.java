@@ -29,8 +29,8 @@ public class UsuarioService implements UserDetailsService {
     public UsuarioResponseDTO createUser(UsuarioCreateDTO dto) {
         Usuario user = new Usuario(
                 dto.nome(),
-                dto.username(),
                 passwordEncoder.encode(dto.password()),
+                dto.role(),
                 true
         );
 
@@ -44,7 +44,6 @@ public class UsuarioService implements UserDetailsService {
 
         newUser.atualizarUsuario(
                 dto.nome(),
-                dto.username(),
                 true
         );
 
@@ -83,18 +82,13 @@ public class UsuarioService implements UserDetailsService {
     public List<UsuarioResponseDTO> listarTodosUsuarios() {
         return userRepo.findAll()
                 .stream()
-                .map(u -> new UsuarioResponseDTO(
-                        u.getId(),
-                        u.getNome(),
-                        u.getUsername(),
-                        u.getAtivo()
-                ))
+                .map(UsuarioResponseDTO::new)
                 .toList();
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByUsername(username)
+        return userRepo.findByNome(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
     }
 }

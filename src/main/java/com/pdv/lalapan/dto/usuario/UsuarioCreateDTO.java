@@ -1,8 +1,10 @@
 package com.pdv.lalapan.dto.usuario;
 
+import com.pdv.lalapan.enums.Role;
+
 public record UsuarioCreateDTO(
         String nome,
-        String username,
+        Role role,
         String password
 ) {
 }
