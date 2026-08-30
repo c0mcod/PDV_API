@@ -19,9 +19,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function carregarOperadores() {
     try {
-        // listarTodosAtivos só retorna ativos, então buscamos todos via outra abordagem
-        // Por ora usamos o endpoint de listar ativos disponível
-        const response = await fetch(`${API_BASE_URL}/usuarios`);
+        const response = await fetch(`${API_BASE_URL}/usuarios`, {
+            headers: getAuthHeaders(false)
+        });
         if (!response.ok) throw new Error("Erro ao buscar operadores");
         todosOsOperadores = await response.json();
         renderizarTabela(todosOsOperadores);
@@ -57,9 +57,9 @@ function renderizarTabela(operadores) {
                 <div class="action-buttons">
                     <button class="btn-action btn-editar" onclick="abrirModalEditar(${op.usuarioId})">Editar</button>
                     ${op.ativo
-                        ? `<button class="btn-action btn-desativar" onclick="desativarOperador(${op.usuarioId})">Desativar</button>`
-                        : `<button class="btn-action btn-ativar" onclick="ativarOperador(${op.usuarioId})">Ativar</button>`
-                    }
+        ? `<button class="btn-action btn-desativar" onclick="desativarOperador(${op.usuarioId})">Desativar</button>`
+        : `<button class="btn-action btn-ativar" onclick="ativarOperador(${op.usuarioId})">Ativar</button>`
+    }
                 </div>
             </td>
         </tr>
@@ -156,7 +156,7 @@ async function salvarOperador(e) {
             // Editar
             const response = await fetch(`${API_BASE_URL}/usuarios/${id}`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: getAuthHeaders(),
                 body: JSON.stringify(payload)
             });
             if (!response.ok) throw new Error("Erro ao atualizar operador");
@@ -165,7 +165,7 @@ async function salvarOperador(e) {
             // Criar
             const response = await fetch(`${API_BASE_URL}/usuarios`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: getAuthHeaders(),
                 body: JSON.stringify(payload)
             });
             if (!response.ok) throw new Error("Erro ao criar operador");
@@ -185,7 +185,10 @@ async function salvarOperador(e) {
 
 async function ativarOperador(id) {
     try {
-        const response = await fetch(`${API_BASE_URL}/usuarios/${id}/ativar`, { method: "PATCH" });
+        const response = await fetch(`${API_BASE_URL}/usuarios/${id}/ativar`, {
+            method: "PATCH",
+            headers: getAuthHeaders(false)
+        });
         if (!response.ok) throw new Error("Erro ao ativar operador");
         showNotificationSuccess("Operador ativado com sucesso!");
         await carregarOperadores();
@@ -196,7 +199,10 @@ async function ativarOperador(id) {
 
 async function desativarOperador(id) {
     try {
-        const response = await fetch(`${API_BASE_URL}/usuarios/${id}/desativar`, { method: "PATCH" });
+        const response = await fetch(`${API_BASE_URL}/usuarios/${id}/desativar`, {
+            method: "PATCH",
+            headers: getAuthHeaders(false)
+        });
         if (!response.ok) throw new Error("Erro ao desativar operador");
         showNotificationSuccess("Operador desativado com sucesso!");
         await carregarOperadores();

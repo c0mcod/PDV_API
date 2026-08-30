@@ -1,0 +1,30 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 400px;
+    margin: 60px auto;
+    padding: 20px;
+}
+input {
+    width: 100%;
+    padding: 8px;
+    margin: 6px 0;
+    box-sizing: border-box;
+}
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+#resultado {
+    margin-top: 20px;
+    padding: 10px;
+    background: #f4f4f4;
+    word-break: break-all;
+    font-size: 13px;
+}
+#tokenAtual {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #555;
+}
