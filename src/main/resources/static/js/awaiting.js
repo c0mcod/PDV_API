@@ -1,4 +1,17 @@
 /* =========================
+   VERIFICAÇÃO DE LOGIN
+========================= */
+
+function verificarLogin() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location.href = "../pages/login.html";
+    return false;
+  }
+  return true;
+}
+
+/* =========================
    OPERADOR
 ========================= */
 
@@ -41,7 +54,13 @@ async function abrirModalOperador() {
     });
 
   } catch (e) {
+    if (e.message === "SESSAO_EXPIRADA") {
+      localStorage.removeItem("token");
+      window.location.href = "../pages/login.html";
+      return;
+    }
     lista.innerHTML = `<div class="operador-loading">Erro ao carregar usuários.</div>`;
+    console.error(e);
   }
 }
 
@@ -50,6 +69,8 @@ async function abrirModalOperador() {
 ========================= */
 
 document.addEventListener("DOMContentLoaded", async () => {
+  if (!verificarLogin()) return;
+
   const operador = getOperadorSalvo();
 
   if (!operador) {

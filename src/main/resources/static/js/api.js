@@ -1,10 +1,5 @@
 const API_BASE_URL = "http://localhost:8090";
 
-const token = localStorage.getItem("token");
-if (!token) {
-    window.location.href = "/pages/login.html";
-}
-
 /* =======================
    AUTENTICAÇÃO
 ======================= */
@@ -25,14 +20,34 @@ function getAuthHeaders(comJson = true) {
     return headers;
 }
 
+// Wrapper central: toda chamada à API passa por aqui.
+// Se a resposta for 401/403, lança "SESSAO_EXPIRADA" pra quem chamou tratar.
+async function apiFetch(endpoint, options = {}) {
+    const comJson = options.comJson !== false;
+    const config = {
+        ...options,
+        headers: {
+            ...getAuthHeaders(comJson),
+            ...(options.headers || {})
+        }
+    };
+    delete config.comJson;
+
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+
+    if (response.status === 401 || response.status === 403) {
+        throw new Error("SESSAO_EXPIRADA");
+    }
+
+    return response;
+}
+
 /* =======================
    PRODUTOS
 ======================= */
 
 async function apiGetProducts(page = 0, size = 10, ativo = true) {
-    const response = await fetch(`${API_BASE_URL}/produto/lista?page=${page}&size=${size}&ativo=${ativo}`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/produto/lista?page=${page}&size=${size}&ativo=${ativo}`, { comJson: false });
     if (!response.ok) {
         throw new Error("Erro ao buscar produtos");
     }
@@ -40,9 +55,7 @@ async function apiGetProducts(page = 0, size = 10, ativo = true) {
 }
 
 async function apiGetAllProducts(ativo = true) {
-    const response = await fetch(`${API_BASE_URL}/produto/lista-todos?ativo=${ativo}`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/produto/lista-todos?ativo=${ativo}`, { comJson: false });
     if (!response.ok) {
         throw new Error("Erro ao buscar todos os produtos");
     }
@@ -50,9 +63,7 @@ async function apiGetAllProducts(ativo = true) {
 }
 
 async function apiGetStatsProducts() {
-    const response = await fetch(`${API_BASE_URL}/produto/stats`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/produto/stats`, { comJson: false });
     if (!response.ok) {
         throw new Error("Erro ao buscar Stats");
     }
@@ -60,9 +71,8 @@ async function apiGetStatsProducts() {
 }
 
 async function apiAtualizarProduct(id, produto) {
-    const response = await fetch(`${API_BASE_URL}/produto/atualiza/${id}`, {
+    const response = await apiFetch(`/produto/atualiza/${id}`, {
         method: 'PUT',
-        headers: getAuthHeaders(),
         body: JSON.stringify(produto)
     });
     if (!response.ok) throw new Error("Erro ao atualizar produto");
@@ -70,9 +80,8 @@ async function apiAtualizarProduct(id, produto) {
 }
 
 async function apiRegistrarEntrada(produtoId, quantidade) {
-    const response = await fetch(`${API_BASE_URL}/produto/${produtoId}/adicionar-estoque`, {
+    const response = await apiFetch(`/produto/${produtoId}/adicionar-estoque`, {
         method: "POST",
-        headers: getAuthHeaders(),
         body: JSON.stringify({ quantidade })
     });
 
@@ -85,9 +94,9 @@ async function apiRegistrarEntrada(produtoId, quantidade) {
 }
 
 async function apiDeleteProducts(id) {
-    const response = await fetch(`${API_BASE_URL}/produto/${id}`, {
+    const response = await apiFetch(`/produto/${id}`, {
         method: "DELETE",
-        headers: getAuthHeaders(false)
+        comJson: false
     });
 
     if (!response.ok) {
@@ -98,9 +107,8 @@ async function apiDeleteProducts(id) {
 
 
 async function apiCreateProduct(product) {
-    const response = await fetch(`${API_BASE_URL}/produto`, {
+    const response = await apiFetch(`/produto`, {
         method: "POST",
-        headers: getAuthHeaders(),
         body: JSON.stringify(product)
     });
 
@@ -114,9 +122,7 @@ async function apiCreateProduct(product) {
 
 async function apiExportarProdutos() {
     try {
-        const response = await fetch(`${API_BASE_URL}/produto/exportar/excel`, {
-            headers: getAuthHeaders(false)
-        });
+        const response = await apiFetch(`/produto/exportar/excel`, { comJson: false });
 
         if (!response.ok) {
             throw new Error('Erro ao exportar');
@@ -132,15 +138,16 @@ async function apiExportarProdutos() {
         window.URL.revokeObjectURL(url);
 
     } catch (error) {
+        if (error.message === "SESSAO_EXPIRADA") throw error;
         console.error('Erro:', error);
         alert('Erro ao exportar produtos');
     }
 }
 
 async function apiAtivarProduto(id) {
-    const response = await fetch(`${API_BASE_URL}/produto/${id}/ativar-produto`, {
+    const response = await apiFetch(`/produto/${id}/ativar-produto`, {
         method: "POST",
-        headers: getAuthHeaders(false)
+        comJson: false
     });
     if (!response.ok) throw new Error("Erro ao ativar produto");
 }
@@ -150,9 +157,7 @@ async function apiAtivarProduto(id) {
 ======================= */
 
 async function apiGetUsuarios() {
-    const response = await fetch(`${API_BASE_URL}/usuarios`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/usuarios`, { comJson: false });
     if (!response.ok) {
         throw new Error("Erro ao buscar usuários");
     }
@@ -164,9 +169,9 @@ async function apiGetUsuarios() {
 ======================= */
 
 async function apiAbrirVenda(usuarioId) {
-    const response = await fetch(`${API_BASE_URL}/venda/abrir?usuarioId=${usuarioId}`, {
+    const response = await apiFetch(`/venda/abrir?usuarioId=${usuarioId}`, {
         method: "POST",
-        headers: getAuthHeaders(false)
+        comJson: false
     });
 
     if (!response.ok) {
@@ -177,17 +182,14 @@ async function apiAbrirVenda(usuarioId) {
 }
 
 async function apiGetVenda(vendaId) {
-    const response = await fetch(`${API_BASE_URL}/venda/${vendaId}`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/venda/${vendaId}`, { comJson: false });
     if (!response.ok) throw new Error("Erro ao carregar venda");
     return response.json();
 }
 
 async function apiAdicionarItemVenda(vendaId, payload) {
-    const response = await fetch(`${API_BASE_URL}/venda/${vendaId}/itens`, {
+    const response = await apiFetch(`/venda/${vendaId}/itens`, {
         method: "POST",
-        headers: getAuthHeaders(),
         body: JSON.stringify(payload)
     });
 
@@ -200,9 +202,8 @@ async function apiAdicionarItemVenda(vendaId, payload) {
 }
 
 async function apiRemoverItemVenda(vendaId, itemId) {
-    const response = await fetch(`${API_BASE_URL}/venda/${vendaId}/remover-item`, {
+    const response = await apiFetch(`/venda/${vendaId}/remover-item`, {
         method: "POST",
-        headers: getAuthHeaders(),
         body: JSON.stringify({ itemId })
     });
 
@@ -215,9 +216,8 @@ async function apiRemoverItemVenda(vendaId, itemId) {
 }
 
 async function apiFinalizarVenda(vendaId, dadosPagamento) {
-    const response = await fetch(`${API_BASE_URL}/venda/${vendaId}/finalizar`, {
+    const response = await apiFetch(`/venda/${vendaId}/finalizar`, {
         method: "POST",
-        headers: getAuthHeaders(),
         body: JSON.stringify(dadosPagamento)
     });
 
@@ -230,9 +230,9 @@ async function apiFinalizarVenda(vendaId, dadosPagamento) {
 }
 
 async function apiCancelarVenda(vendaId) {
-    const response = await fetch(`${API_BASE_URL}/venda/${vendaId}/cancelar-venda`, {
+    const response = await apiFetch(`/venda/${vendaId}/cancelar-venda`, {
         method: "POST",
-        headers: getAuthHeaders(false)
+        comJson: false
     });
 
     if (!response.ok) {
@@ -244,9 +244,7 @@ async function apiCancelarVenda(vendaId) {
 }
 
 async function apiGetDetalhesVenda(vendaId) {
-    const response = await fetch(`${API_BASE_URL}/historico-vendas/detalhes/${vendaId}`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/historico-vendas/detalhes/${vendaId}`, { comJson: false });
     if (!response.ok) {
         throw new Error("Erro ao buscar detalhes da venda");
     }
@@ -254,12 +252,10 @@ async function apiGetDetalhesVenda(vendaId) {
 }
 
 async function apiGetHistoricoVendas(dataInicio, dataFim, operadorId, page, size) {
-    let url = `${API_BASE_URL}/historico-vendas?dataInicio=${dataInicio}&dataFim=${dataFim}&page=${page}&size=${size}`;
+    let url = `/historico-vendas?dataInicio=${dataInicio}&dataFim=${dataFim}&page=${page}&size=${size}`;
     if (operadorId) url += `&operadorId=${operadorId}`;
 
-    const response = await fetch(url, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(url, { comJson: false });
     if (!response.ok) {
         throw new Error("Erro ao buscar histórico de vendas");
     }
@@ -269,21 +265,17 @@ async function apiGetHistoricoVendas(dataInicio, dataFim, operadorId, page, size
 async function apiGetHistoricoStats(dataInicio, dataFim, operadorId) {
     const params = new URLSearchParams({ dataInicio, dataFim });
     if (operadorId) params.append("operadorId", operadorId);
-    const res = await fetch(`${API_BASE_URL}/historico-vendas/stats?${params}`, {
-        headers: getAuthHeaders(false)
-    });
+    const res = await apiFetch(`/historico-vendas/stats?${params}`, { comJson: false });
     if (!res.ok) throw new Error("Erro ao buscar stats");
     return res.json();
 }
 
 async function apiExportarHistoricoVendas(operadorId, dataInicio, dataFim) {
     try {
-        let url = `${API_BASE_URL}/historico-vendas/exportar/excel?dataInicio=${dataInicio}&dataFim=${dataFim}`;
+        let url = `/historico-vendas/exportar/excel?dataInicio=${dataInicio}&dataFim=${dataFim}`;
         if (operadorId) url += `&operadorId=${operadorId}`;
 
-        const response = await fetch(url, {
-            headers: getAuthHeaders(false)
-        });
+        const response = await apiFetch(url, { comJson: false });
 
         if (!response.ok) {
             throw new Error('Erro ao exportar');
@@ -298,6 +290,7 @@ async function apiExportarHistoricoVendas(operadorId, dataInicio, dataFim) {
         window.URL.revokeObjectURL(urlBlob);
 
     } catch (error) {
+        if (error.message === "SESSAO_EXPIRADA") throw error;
         console.error('Erro:', error);
         showNotificationError('Erro ao exportar histórico de vendas');
     }
@@ -307,9 +300,7 @@ async function apiExportarHistoricoVendas(operadorId, dataInicio, dataFim) {
 ======================= */
 
 async function apiGetProdutosVendidosKpi(periodo) {
-    const response = await fetch(`${API_BASE_URL}/api/relatorios/kpis?periodo=${periodo}`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/api/relatorios/kpis?periodo=${periodo}`, { comJson: false });
     if(!response.ok) {
         throw new Error("Erro ao buscar KPI de produtos vendidos");
     }
@@ -317,49 +308,37 @@ async function apiGetProdutosVendidosKpi(periodo) {
 }
 
 async function apiGetProdutosVendidosKpiPorData(dataInicio, dataFim) {
-    const response = await fetch(`${API_BASE_URL}/api/relatorios/kpis?dataInicio=${dataInicio}&dataFim=${dataFim}`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/api/relatorios/kpis?dataInicio=${dataInicio}&dataFim=${dataFim}`, { comJson: false });
     if(!response.ok) throw new Error("Erro ao buscar KPI de produtos vendidos");
     return response.json();
 }
 
 async function apiGetVendasDiasemanaPorData(dataInicio, dataFim) {
-    const response = await fetch(`${API_BASE_URL}/api/relatorios/vendas-dia-semana?dataInicio=${dataInicio}&dataFim=${dataFim}`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/api/relatorios/vendas-dia-semana?dataInicio=${dataInicio}&dataFim=${dataFim}`, { comJson: false });
     if(!response.ok) throw new Error("Erro ao buscar vendas por dia");
     return response.json();
 }
 
 async function apiGetTopProdutosPorData(dataInicio, dataFim, limite = 5) {
-    const response = await fetch(`${API_BASE_URL}/api/relatorios/top-produtos?dataInicio=${dataInicio}&dataFim=${dataFim}&limite=${limite}`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/api/relatorios/top-produtos?dataInicio=${dataInicio}&dataFim=${dataFim}&limite=${limite}`, { comJson: false });
     if(!response.ok) throw new Error("Erro ao buscar top produtos");
     return response.json();
 }
 
 async function apiGetVendasCategoriaPorData(dataInicio, dataFim) {
-    const response = await fetch(`${API_BASE_URL}/api/relatorios/vendas-categoria?dataInicio=${dataInicio}&dataFim=${dataFim}`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/api/relatorios/vendas-categoria?dataInicio=${dataInicio}&dataFim=${dataFim}`, { comJson: false });
     if(!response.ok) throw new Error("Erro ao buscar vendas por categoria");
     return response.json();
 }
 
 async function apiGetIndicadoresFinanceirosPorData(dataInicio, dataFim) {
-    const response = await fetch(`${API_BASE_URL}/api/relatorios/indicadores-financeiros?dataInicio=${dataInicio}&dataFim=${dataFim}`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/api/relatorios/indicadores-financeiros?dataInicio=${dataInicio}&dataFim=${dataFim}`, { comJson: false });
     if(!response.ok) throw new Error("Erro ao buscar indicadores financeiros");
     return response.json();
 }
 
 async function apiGetVendasDiaSemana(periodo) {
-    const response = await fetch(`${API_BASE_URL}/api/relatorios/vendas-dia-semana?periodo=${periodo}`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/api/relatorios/vendas-dia-semana?periodo=${periodo}`, { comJson: false });
     if(!response.ok) {
         throw new Error("Erro ao buscar vendas por dia");
     }
@@ -367,9 +346,7 @@ async function apiGetVendasDiaSemana(periodo) {
 }
 
 async function apiGetTopProdutos(periodo, limite = 5) {
-    const response = await fetch(`${API_BASE_URL}/api/relatorios/top-produtos?periodo=${periodo}&limite=${limite}`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/api/relatorios/top-produtos?periodo=${periodo}&limite=${limite}`, { comJson: false });
     if(!response.ok) {
         throw new Error("Erro ao buscar top produtos");
     }
@@ -377,9 +354,7 @@ async function apiGetTopProdutos(periodo, limite = 5) {
 }
 
 async function apiGetVendasCategoria(periodo) {
-    const response = await fetch(`${API_BASE_URL}/api/relatorios/vendas-categoria?periodo=${periodo}`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/api/relatorios/vendas-categoria?periodo=${periodo}`, { comJson: false });
     if(!response.ok) {
         throw new Error("Erro ao buscar vendas por categoria");
     }
@@ -387,9 +362,7 @@ async function apiGetVendasCategoria(periodo) {
 }
 
 async function apiGetIndicadoresFinanceiros(periodo) {
-    const response = await fetch(`${API_BASE_URL}/api/relatorios/indicadores-financeiros?periodo=${periodo}`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/api/relatorios/indicadores-financeiros?periodo=${periodo}`, { comJson: false });
     if(!response.ok) {
         throw new Error("Erro ao buscar indicadores financeiros");
     }
@@ -397,9 +370,7 @@ async function apiGetIndicadoresFinanceiros(periodo) {
 }
 
 async function apiGetResumoEstoque() {
-    const response = await fetch(`${API_BASE_URL}/api/relatorios/resumo-estoque`, {
-        headers: getAuthHeaders(false)
-    });
+    const response = await apiFetch(`/api/relatorios/resumo-estoque`, { comJson: false });
     if(!response.ok) {
         throw new Error("Erro ao buscar resumo do estoque");
     }

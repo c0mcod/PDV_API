@@ -14,21 +14,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // ===================================
+// TRATAMENTO DE SESSÃO EXPIRADA
+// ===================================
+
+function tratarErro(e, mensagemPadrao) {
+    if (e.message === "SESSAO_EXPIRADA") {
+        localStorage.removeItem("token");
+        window.location.href = "../pages/login.html";
+        return;
+    }
+    showNotificationError(mensagemPadrao);
+    console.error(e);
+}
+
+// ===================================
 // CARREGAR OPERADORES
 // ===================================
 
 async function carregarOperadores() {
     try {
-        const response = await fetch(`${API_BASE_URL}/usuarios`, {
-            headers: getAuthHeaders(false)
-        });
-        if (!response.ok) throw new Error("Erro ao buscar operadores");
-        todosOsOperadores = await response.json();
+        todosOsOperadores = await apiGetUsuarios();
         renderizarTabela(todosOsOperadores);
         atualizarStats(todosOsOperadores);
     } catch (e) {
-        showNotificationError("Erro ao carregar operadores.");
-        console.error(e);
+        tratarErro(e, "Erro ao carregar operadores.");
     }
 }
 
@@ -153,19 +162,15 @@ async function salvarOperador(e) {
 
     try {
         if (id) {
-            // Editar
-            const response = await fetch(`${API_BASE_URL}/usuarios/${id}`, {
+            const response = await apiFetch(`/usuarios/${id}`, {
                 method: "PUT",
-                headers: getAuthHeaders(),
                 body: JSON.stringify(payload)
             });
             if (!response.ok) throw new Error("Erro ao atualizar operador");
             showNotificationSuccess("Operador atualizado com sucesso!");
         } else {
-            // Criar
-            const response = await fetch(`${API_BASE_URL}/usuarios`, {
+            const response = await apiFetch(`/usuarios`, {
                 method: "POST",
-                headers: getAuthHeaders(),
                 body: JSON.stringify(payload)
             });
             if (!response.ok) throw new Error("Erro ao criar operador");
@@ -175,7 +180,7 @@ async function salvarOperador(e) {
         fecharModal();
         await carregarOperadores();
     } catch (err) {
-        showNotificationError(err.message);
+        tratarErro(err, err.message);
     }
 }
 
@@ -185,28 +190,22 @@ async function salvarOperador(e) {
 
 async function ativarOperador(id) {
     try {
-        const response = await fetch(`${API_BASE_URL}/usuarios/${id}/ativar`, {
-            method: "PATCH",
-            headers: getAuthHeaders(false)
-        });
+        const response = await apiFetch(`/usuarios/${id}/ativar`, { method: "PATCH", comJson: false });
         if (!response.ok) throw new Error("Erro ao ativar operador");
         showNotificationSuccess("Operador ativado com sucesso!");
         await carregarOperadores();
     } catch (e) {
-        showNotificationError(e.message);
+        tratarErro(e, e.message);
     }
 }
 
 async function desativarOperador(id) {
     try {
-        const response = await fetch(`${API_BASE_URL}/usuarios/${id}/desativar`, {
-            method: "PATCH",
-            headers: getAuthHeaders(false)
-        });
+        const response = await apiFetch(`/usuarios/${id}/desativar`, { method: "PATCH", comJson: false });
         if (!response.ok) throw new Error("Erro ao desativar operador");
         showNotificationSuccess("Operador desativado com sucesso!");
         await carregarOperadores();
     } catch (e) {
-        showNotificationError(e.message);
+        tratarErro(e, e.message);
     }
 }
