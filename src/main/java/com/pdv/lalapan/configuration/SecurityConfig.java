@@ -31,7 +31,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))// Desativa CSRF (comum para APIs REST)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/usuarios").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/pages/**", "/css/**", "/js/**", "/assets/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
